@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneo 3v3 - Edición Mundial 26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wc-black: #090a0f;
+            --wc-red: #ff1e42;
+            --wc-green: #00e676;
+            --wc-blue: #00b4d8;
+            --wc-purple: #6d28d9;
+            --wc-gold: #d4af37;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f4f4f8;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(255, 30, 66, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 0%, rgba(0, 180, 216, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 50% 100%, rgba(0, 230, 118, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: #090a0f;
+        }
+        .font-sport {
+            font-family: 'Barlow Condensed', sans-serif;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        /* Estilo Oficial FIFA World Cup 26 Header & Bloques */
+        .pitch-header {
+            background-color: #090a0f;
+            background-image: 
+                radial-gradient(at 15% 0%, rgba(255, 30, 66, 0.28) 0px, transparent 55%),
+                radial-gradient(at 85% 100%, rgba(0, 180, 216, 0.28) 0px, transparent 55%),
+                radial-gradient(at 50% 50%, rgba(109, 40, 217, 0.18) 0px, transparent 60%),
+                repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 2px, transparent 2px, transparent 12px);
+            position: relative;
+        }
+        /* Cinta multicolor característica de We Are 26 */
+        .wc26-ribbon {
+            height: 5px;
+            background: linear-gradient(90deg, #ff1e42 0%, #ff1e42 25%, #00e676 25%, #00e676 50%, #00b4d8 50%, #00b4d8 75%, #8b5cf6 75%, #8b5cf6 100%);
+        }
+        /* Cabeceras de paneles al estilo Broadcast TV 2026 */
+        .wc26-panel-header {
+            background: linear-gradient(100deg, #090a0f 0%, #151824 65%, #1e132a 100%);
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #ff1e42, #00e676, #00b4d8) 1;
+        }
+        /* Botón principal de sorteo estilo entradas FIFA 26 */
+        .wc26-cta-btn {
+            background: linear-gradient(90deg, #ff1e42 0%, #d90429 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 20px -4px rgba(255, 30, 66, 0.45);
+        }
+        .wc26-cta-btn:hover {
+            background: linear-gradient(90deg, #ff3355 0%, #ef233c 100%);
+            transform: translateY(-1px);
+        }
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e4e4ed;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #090a0f;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff1e42;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ENCABEZADO -->
+    <header class="pitch-header text-white shadow-2xl sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+                <!-- Emblema Vertical inspirado en "26" de FIFA -->
+                <div class="w-12 h-14 bg-white rounded-lg flex flex-col items-center justify-center text-slate-950 font-sport font-black leading-none shadow-lg border-2 border-white relative overflow-hidden shrink-0">
+                    <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#ff1e42] via-[#00e676] to-[#00b4d8]"></div>
+                    <span class="text-[11px] tracking-tighter font-extrabold text-slate-500 mt-1">FIFA</span>
+                    <span class="text-2xl tracking-tighter font-black text-slate-950 -mt-1">26</span>
+                    <span class="text-[9px] bg-slate-950 text-[#00e676] px-1.5 py-0.2 rounded-sm font-bold tracking-widest">3V3</span>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-extrabold uppercase tracking-[0.25em] px-2 py-0.5 rounded bg-white/10 text-[#00e676] border border-white/10">We Are 26</span>
+                        <span class="text-xs text-slate-300 font-semibold tracking-wider uppercase" id="header-status">Fase de Inscripción</span>
+                    </div>
+                    <h1 class="font-sport text-3xl sm:text-4xl font-black tracking-wide uppercase leading-none text-white mt-0.5">
+                      <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff1e42] via-[#00e676] to-[#00b4d8]">3v3 2026</span>
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Navegación (Oculta hasta iniciar torneo) -->
+            <nav id="main-nav" class="hidden md:flex space-x-1.5 bg-white/5 p-1.5 rounded-xl border border-white/10 backdrop-blur-md">
+                <button onclick="switchTab('tab-matches')" id="btn-tab-matches" class="nav-btn font-sport text-lg tracking-wider px-5 py-1.5 rounded-lg font-extrabold transition-all bg-[#00e676] text-slate-950 shadow-sm">Partidos</button>
+                <button onclick="switchTab('tab-standings')" id="btn-tab-standings" class="nav-btn font-sport text-lg tracking-wider px-5 py-1.5 rounded-lg font-bold text-slate-200 hover:text-white hover:bg-white/10 transition-all">Posiciones</button>
+                <button onclick="switchTab('tab-stats')" id="btn-tab-stats" class="nav-btn font-sport text-lg tracking-wider px-5 py-1.5 rounded-lg font-bold text-slate-200 hover:text-white hover:bg-white/10 transition-all">Estadísticas</button>
+                <button onclick="switchTab('tab-knockout')" id="btn-tab-knockout" class="nav-btn font-sport text-lg tracking-wider px-5 py-1.5 rounded-lg font-bold text-slate-200 hover:text-white hover:bg-white/10 transition-all">Fase Final</button>
+            </nav>
+
+            <div class="flex items-center space-x-2">
+                <button onclick="loadDemoData()" id="btn-demo" class="text-xs bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-lg border border-white/20 font-bold uppercase tracking-wider transition">
+                    Cargar 8 Equipos Demo
+                </button>
+                <button onclick="resetTournamentModal()" id="btn-reset" class="hidden text-xs bg-[#ff1e42] hover:bg-[#e01537] text-white px-3.5 py-2 rounded-lg font-bold uppercase tracking-wider transition shadow-md">
+                    Reiniciar
+                </button>
+            </div>
+        </div>
+        <!-- Cinta multicolor -->
+        <div class="wc26-ribbon"></div>
+        <!-- Nav Móvil -->
+        <div id="mobile-nav" class="hidden md:hidden bg-[#090a0f] px-2 py-2 flex justify-around border-t border-white/10">
+            <button onclick="switchTab('tab-matches')" id="m-btn-tab-matches" class="nav-btn-m font-sport text-base tracking-wider px-3.5 py-1 rounded font-extrabold bg-[#00e676] text-slate-950">Partidos</button>
+            <button onclick="switchTab('tab-standings')" id="m-btn-tab-standings" class="nav-btn-m font-sport text-base tracking-wider px-3.5 py-1 rounded font-bold text-slate-300">Posiciones</button>
+            <button onclick="switchTab('tab-stats')" id="m-btn-tab-stats" class="nav-btn-m font-sport text-base tracking-wider px-3.5 py-1 rounded font-bold text-slate-300">Goleadores</button>
+            <button onclick="switchTab('tab-knockout')" id="m-btn-tab-knockout" class="nav-btn-m font-sport text-base tracking-wider px-3.5 py-1 rounded font-bold text-slate-300">Fase Final</button>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Notificación / Alerta Custom -->
+        <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-[#090a0f] text-white px-5 py-3.5 rounded-xl shadow-2xl border-l-4 border-[#00e676] flex items-center space-x-3 transition-transform duration-300">
+            <span id="toast-msg" class="text-sm font-semibold tracking-wide">Mensaje</span>
+        </div>
+
+        <!-- ==========================================
+             VISTA 1: CONFIGURACIÓN E INSCRIPCIÓN
+        =========================================== -->
+        <div id="setup-view" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Columna Izquierda: Formulario de Equipo y Reglas -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Panel Agregar Equipo -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden">
+                    <div class="wc26-panel-header px-6 py-4 flex justify-between items-center">
+                        <h2 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">Inscribir Selección</h2>
+                        <span class="text-xs bg-[#00e676] text-slate-950 font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider">3 Jugadores</span>
+                    </div>
+                    <form id="team-form" onsubmit="addTeam(event)" class="p-6 space-y-4">
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-1">País / Federación</label>
+                            <div class="flex space-x-2">
+                                <select id="country-select" onchange="toggleCustomCountry()" class="w-full rounded-lg border-slate-300 border px-3 py-2.5 text-sm focus:ring-2 focus:ring-[#00b4d8] focus:border-[#00b4d8] outline-none bg-slate-50 font-semibold">
+                                    <option value="ARG|Argentina|#38bdf8|#ffffff">Argentina (ARG)</option>
+                                    <option value="BRA|Brasil|#facc15|#15803d">Brasil (BRA)</option>
+                                    <option value="URU|Uruguay|#60a5fa|#0f172a">Uruguay (URU)</option>
+                                    <option value="FRA|Francia|#1e3a8a|#ef4444">Francia (FRA)</option>
+                                    <option value="ESP|España|#dc2626|#facc15">España (ESP)</option>
+                                    <option value="GER|Alemania|#171717|#d97706">Alemania (GER)</option>
+                                    <option value="ITA|Italia|#2563eb|#ffffff">Italia (ITA)</option>
+                                    <option value="ENG|Inglaterra|#f8fafc|#dc2626">Inglaterra (ENG)</option>
+                                    <option value="POR|Portugal|#991b1b|#15803d">Portugal (POR)</option>
+                                    <option value="NED|Países Bajos|#f97316|#171717">Países Bajos (NED)</option>
+                                    <option value="COL|Colombia|#fde047|#1d4ed8">Colombia (COL)</option>
+                                    <option value="CRO|Croacia|#ef4444|#ffffff">Croacia (CRO)</option>
+                                    <option value="MAR|Marruecos|#b91c1c|#15803d">Marruecos (MAR)</option>
+                                    <option value="JPN|Japón|#1e40af|#ffffff">Japón (JPN)</option>
+                                    <option value="MEX|México|#15803d|#b91c1c">México (MEX)</option>
+                                    <option value="USA|Estados Unidos|#1e3a8a|#dc2626">Estados Unidos (USA)</option>
+                                    <option value="CAN|Canadá|#dc2626|#ffffff">Canadá (CAN)</option>
+                                    <option value="CHL|Chile|#dc2626|#1d4ed8">Chile (CHL)</option>
+                                    <option value="CUSTOM">-- Otro País (Personalizado) --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Input País Personalizado -->
+                        <div id="custom-country-box" class="hidden grid grid-cols-3 gap-2 pt-1">
+                            <div class="col-span-2">
+                                <input type="text" id="custom-country-name" placeholder="Nombre del País" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm">
+                            </div>
+                            <div>
+                                <input type="text" id="custom-country-code" placeholder="Sigla (Ej: PER)" maxlength="3" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm uppercase">
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 space-y-3">
+                            <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider">Convocados (3 Integrantes)</label>
+                            <div>
+                                <input type="text" id="player1" required placeholder="Jugador 1 (Capitán)" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-[#00b4d8] outline-none">
+                            </div>
+                            <div>
+                                <input type="text" id="player2" required placeholder="Jugador 2" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-[#00b4d8] outline-none">
+                            </div>
+                            <div>
+                                <input type="text" id="player3" required placeholder="Jugador 3" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-[#00b4d8] outline-none">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-[#090a0f] hover:bg-slate-800 text-white font-sport text-xl font-extrabold py-2.5 px-4 rounded-xl shadow transition duration-150 uppercase tracking-widest border-b-2 border-[#00e676]">
+                            + Registrar Selección
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Panel Configuración de Formato -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden">
+                    <div class="wc26-panel-header px-6 py-4">
+                        <h2 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">Formato del Mundial</h2>
+                    </div>
+                    <div class="p-6 space-y-5">
+                        
+                        <!-- Selector Liga vs Copa -->
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-2">Modalidad de Fase Regular</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="format-type" value="LEAGUE" class="peer sr-only" checked onchange="updateFormatUI()">
+                                    <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-[#090a0f] peer-checked:bg-slate-900 peer-checked:text-white transition text-center">
+                                        <div class="font-sport text-2xl font-extrabold">LIGA (Todos vs Todos)</div>
+                                        <div class="text-xs opacity-75">Tabla única general</div>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="format-type" value="CUP" class="peer sr-only" onchange="updateFormatUI()">
+                                    <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-[#090a0f] peer-checked:bg-slate-900 peer-checked:text-white transition text-center">
+                                        <div class="font-sport text-2xl font-extrabold">COPA (Por Grupos)</div>
+                                        <div class="text-xs opacity-75">Zonas sorteadas al azar</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Opciones para LIGA -->
+                        <div id="league-options" class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div>
+                                <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Clasificados a Eliminatorias (Top)</label>
+                                <select id="league-qualifiers" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm bg-white font-semibold">
+                                    <option value="2">Pasan los Top 2 (Final Directa)</option>
+                                    <option value="4" selected>Pasan los Top 4 (Semifinales)</option>
+                                    <option value="8">Pasan los Top 8 (Cuartos de Final)</option>
+                                    <option value="0">Ninguno (El 1° de la tabla es Campeón)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Opciones para COPA -->
+                        <div id="cup-options" class="hidden space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div>
+                                <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Cantidad de Grupos</label>
+                                <select id="cup-groups" onchange="updateCupSummary()" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm bg-white font-semibold">
+                                    <option value="2">2 Grupos (Zona A y B)</option>
+                                    <option value="4">4 Grupos (Zonas A, B, C, D)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Clasificados por cada Grupo</label>
+                                <select id="cup-qualifiers" onchange="updateCupSummary()" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm bg-white font-semibold">
+                                    <option value="1">Pasa 1 por grupo</option>
+                                    <option value="2" selected>Pasan 2 por grupo</option>
+                                    <option value="4">Pasan 4 por grupo</option>
+                                </select>
+                            </div>
+                            <div class="text-xs text-slate-900 bg-[#00e676]/20 border border-[#00e676] px-3 py-2 rounded-lg font-bold" id="cup-summary-text">
+                                Con 2 grupos pasando 2 de cada uno, se jugarán Semifinales (4 equipos).
+                            </div>
+                        </div>
+
+                        <button onclick="startTournament()" class="wc26-cta-btn w-full font-sport text-2xl font-black py-3.5 px-4 rounded-xl transition duration-150 uppercase tracking-widest flex items-center justify-center space-x-2">
+                            <span>Sortear Fixture e Iniciar Mundial</span>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Columna Derecha: Lista de Equipos Inscritos -->
+            <div class="lg:col-span-7">
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 h-full flex flex-col overflow-hidden">
+                    <div class="wc26-panel-header px-6 py-4 flex justify-between items-center">
+                        <h2 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">Selecciones Confirmadas</h2>
+                        <span id="team-count-badge" class="bg-[#00b4d8] text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">0 Equipos</span>
+                    </div>
+                    
+                    <div class="p-6 flex-grow">
+                        <div id="empty-teams-state" class="text-center py-16 border-2 border-dashed border-slate-200 rounded-2xl">
+                            <div class="w-16 h-16 bg-slate-950 text-[#00e676] rounded-2xl flex items-center justify-center mx-auto mb-3 font-sport text-3xl font-black shadow">26</div>
+                            <h3 class="text-slate-800 font-extrabold text-base uppercase font-sport tracking-wide text-xl">No hay selecciones registradas</h3>
+                            <p class="text-slate-500 text-xs mt-1 max-w-sm mx-auto">Utiliza el panel izquierdo para agregar países y sus 3 jugadores, o usa el botón superior "Cargar 8 Equipos Demo" para probar rápido.</p>
+                        </div>
+
+                        <div id="teams-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Tarjetas de equipos generadas por JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+             VISTA 2: TORNEO EN CURSO (TABS)
+        =========================================== -->
+        <div id="tournament-view" class="hidden space-y-6">
+
+            <!-- TAB 1: PARTIDOS (FIXTURE) -->
+            <div id="tab-matches" class="tab-content space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl shadow-md border border-slate-200/90">
+                    <div>
+                        <h2 class="font-sport text-3xl font-black text-slate-950 uppercase leading-none">Calendario Oficial de Partidos</h2>
+                        <p class="text-xs text-slate-500 mt-1">Haz clic en cualquier encuentro para abrir el acta oficial, cargar goles y elegir al Jugador del Partido.</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span id="matches-progress" class="font-sport text-lg font-bold bg-slate-100 text-slate-800 px-3.5 py-1 rounded-lg border border-slate-200">0 / 0 Jugados</span>
+                        <button onclick="generateKnockoutPhase()" class="bg-[#090a0f] hover:bg-slate-800 text-[#00e676] font-sport text-lg font-extrabold uppercase tracking-wider px-5 py-2 rounded-xl shadow transition border border-[#00e676]/40">
+                            Avanzar a Fase Final &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contenedor de Partidos (Agrupados por Zona o Liga) -->
+                <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- JS Inyecta los partidos aquí -->
+                </div>
+            </div>
+
+            <!-- TAB 2: TABLAS DE POSICIONES -->
+            <div id="tab-standings" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200/90 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="font-sport text-3xl font-black text-slate-950 uppercase leading-none">Posiciones Oficiales FIFA 26</h2>
+                        <p class="text-xs text-slate-500 mt-1">Criterio de desempate: 1° Puntos (PTS), 2° Diferencia de Gol (DG), 3° Goles a Favor (GF).</p>
+                    </div>
+                    <div class="flex items-center space-x-2 text-xs font-bold text-slate-950 bg-[#00e676]/20 border border-[#00e676] px-3.5 py-2 rounded-xl">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#00e676] inline-block"></span>
+                        <span id="qualification-legend">En zona de clasificación a la siguiente fase</span>
+                    </div>
+                </div>
+
+                <div id="standings-container" class="space-y-8">
+                    <!-- JS Inyecta la(s) tabla(s) aquí -->
+                </div>
+            </div>
+
+            <!-- TAB 3: GOLEADORES Y FIGURAS -->
+            <div id="tab-stats" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Tabla Goleadores -->
+                    <div class="lg:col-span-2 bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden">
+                        <div class="wc26-panel-header px-6 py-4 flex justify-between items-center">
+                            <h3 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">Bota de Oro 2026 (Goleadores)</h3>
+                            <span class="text-xs text-[#00e676] font-extrabold uppercase tracking-wider">Fase Regular + Eliminatorias</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-950/5 text-slate-700 font-sport text-base tracking-wider uppercase border-b border-slate-200">
+                                        <th class="py-3 px-4 font-extrabold w-12 text-center">Pos</th>
+                                        <th class="py-3 px-4 font-extrabold">Jugador</th>
+                                        <th class="py-3 px-4 font-extrabold">Selección</th>
+                                        <th class="py-3 px-4 font-extrabold text-center">Goles</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="scorers-tbody" class="divide-y divide-slate-100 text-sm">
+                                    <!-- JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Ranking MVP (Figuras) -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden">
+                        <div class="wc26-panel-header px-6 py-4 flex justify-between items-center">
+                            <h3 class="font-sport text-2xl font-extrabold text-[#00b4d8] uppercase tracking-wider">Player of the Match (MVP)</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-950/5 text-slate-700 font-sport text-base tracking-wider uppercase border-b border-slate-200">
+                                        <th class="py-3 px-4 font-extrabold">Jugador</th>
+                                        <th class="py-3 px-4 font-extrabold text-center">Trofeos</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mvp-tbody" class="divide-y divide-slate-100 text-sm">
+                                    <!-- JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TAB 4: FASE FINAL (ELIMINATORIAS) -->
+            <div id="tab-knockout" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200/90 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="font-sport text-3xl font-black text-slate-950 uppercase leading-none">Cuadro Eliminatorio rumbo a la Final</h2>
+                        <p class="text-xs text-slate-500 mt-1">Los cruces se arman según la posición en la tabla. En caso de empate en fase final, define quién avanza.</p>
+                    </div>
+                    <button onclick="generateKnockoutPhase(true)" class="bg-[#090a0f] hover:bg-slate-800 text-white font-sport text-base tracking-wider font-bold uppercase px-4 py-2 rounded-xl transition border border-white/10">
+                        Actualizar / Recalcular Cruces con Tabla Actual
+                    </button>
+                </div>
+
+                <!-- Banner de Campeón (Oculto hasta que haya ganador de la final) -->
+                <div id="champion-banner" class="hidden pitch-header rounded-2xl p-8 text-center text-white border-2 border-[#d4af37] shadow-2xl overflow-hidden">
+                    <div class="inline-block bg-gradient-to-r from-[#d4af37] to-[#facc15] text-slate-950 font-extrabold text-xs uppercase px-4 py-1 rounded-full mb-2 tracking-widest">World Champions 2026 • 3v3</div>
+                    <h3 id="champion-name" class="font-sport text-6xl sm:text-7xl font-black uppercase text-white leading-none my-2 tracking-wide">ARGENTINA</h3>
+                    <p id="champion-players" class="text-sm text-[#00e676] font-bold tracking-wide">Integrantes: Jugador 1, Jugador 2, Jugador 3</p>
+                </div>
+
+                <!-- Contenedor del Bracket -->
+                <div id="knockout-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- JS Inyecta Cuartos, Semis, Final -->
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ==========================================
+         MODAL: CARGAR RESULTADO Y GOLEADORES
+    =========================================== -->
+    <div id="match-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8">
+            
+            <!-- Modal Header -->
+            <div class="wc26-panel-header px-6 py-4 flex justify-between items-center">
+                <div>
+                    <span id="modal-match-label" class="text-xs font-extrabold text-[#00e676] uppercase tracking-widest">Grupo A - Partido 1</span>
+                    <h3 class="font-sport text-2xl font-extrabold text-white uppercase leading-none mt-0.5">Match Centre • Planilla Oficial</h3>
+                </div>
+                <button onclick="closeMatchModal()" class="text-slate-400 hover:text-white p-1">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+                
+                <!-- Cronómetro Oficial de Partido (10:00 + Tiempo Agregado) -->
+                <div class="bg-[#090a0f] text-white rounded-xl p-3.5 border border-slate-800 shadow-inner flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-white/10 px-3.5 py-1.5 rounded-lg border border-white/10 flex items-baseline space-x-2">
+                            <span id="timer-display" class="font-sport text-3xl sm:text-4xl font-black tracking-wider text-[#00e676] leading-none">10:00</span>
+                            <span id="timer-added-badge" class="hidden font-sport text-sm font-extrabold text-[#ff1e42] tracking-wider">+0m</span>
+                        </div>
+                        <div>
+                            <div id="timer-status-label" class="text-[11px] font-extrabold uppercase tracking-widest text-slate-400">Tiempo Reglamentario</div>
+                            <div class="flex items-center space-x-1.5 mt-0.5">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold">Duración:</span>
+                                <button type="button" onclick="changeBaseDuration(-1)" class="text-[10px] bg-white/10 hover:bg-white/20 px-1.5 rounded font-bold text-slate-200">-1m</button>
+                                <button type="button" onclick="changeBaseDuration(1)" class="text-[10px] bg-white/10 hover:bg-white/20 px-1.5 rounded font-bold text-slate-200">+1m</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center gap-1.5">
+                        <button type="button" id="btn-timer-toggle" onclick="toggleMatchTimer()" class="bg-[#00e676] hover:bg-[#00c865] text-slate-950 font-sport text-base font-extrabold uppercase tracking-wider px-3.5 py-1.5 rounded-lg transition shadow">
+                            Iniciar
+                        </button>
+                        <button type="button" onclick="resetMatchTimer()" class="bg-white/10 hover:bg-white/20 text-slate-200 font-sport text-base font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-lg transition" title="Reiniciar reloj">
+                            Reset
+                        </button>
+                        <div class="h-5 w-px bg-white/15 mx-0.5"></div>
+                        <button type="button" onclick="addExtraTime(30)" class="bg-[#00b4d8]/20 hover:bg-[#00b4d8]/30 text-[#00b4d8] border border-[#00b4d8]/40 font-sport text-sm font-extrabold uppercase px-2 py-1.5 rounded-lg transition">
+                            +30s
+                        </button>
+                        <button type="button" onclick="addExtraTime(60)" class="bg-[#ff1e42]/20 hover:bg-[#ff1e42]/30 text-[#ff1e42] border border-[#ff1e42]/40 font-sport text-sm font-extrabold uppercase px-2 py-1.5 rounded-lg transition">
+                            +1m
+                        </button>
+                        <button type="button" onclick="addExtraTime(120)" class="bg-[#ff1e42]/20 hover:bg-[#ff1e42]/30 text-[#ff1e42] border border-[#ff1e42]/40 font-sport text-sm font-extrabold uppercase px-2 py-1.5 rounded-lg transition">
+                            +2m
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Marcador Global (Calculado por los goles de jugadores) -->
+                <div class="bg-slate-100 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div class="text-center flex-1">
+                        <span id="modal-home-badge" class="inline-block text-xs font-extrabold px-2 py-0.5 rounded mb-1">ARG</span>
+                        <div id="modal-home-name" class="font-sport text-2xl font-bold text-slate-900 leading-none">Argentina</div>
+                    </div>
+                    <div class="px-6 flex items-center space-x-3">
+                        <span id="modal-home-score" class="font-sport text-5xl font-bold text-slate-900 bg-white px-4 py-1 rounded-lg border border-slate-300 shadow-inner">0</span>
+                        <span class="font-sport text-2xl text-slate-400">VS</span>
+                        <span id="modal-away-score" class="font-sport text-5xl font-bold text-slate-900 bg-white px-4 py-1 rounded-lg border border-slate-300 shadow-inner">0</span>
+                    </div>
+                    <div class="text-center flex-1">
+                        <span id="modal-away-badge" class="inline-block text-xs font-extrabold px-2 py-0.5 rounded mb-1">BRA</span>
+                        <div id="modal-away-name" class="font-sport text-2xl font-bold text-slate-900 leading-none">Brasil</div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-center text-slate-500 -mt-3">Asigna los goles a cada jugador abajo; el marcador global se suma automáticamente (o agrega goles en contra/ajuste).</p>
+
+                <!-- Goleadores por Equipo -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Jugadores Local -->
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-3">
+                        <h4 id="modal-home-list-title" class="text-xs font-bold uppercase text-slate-700 border-b pb-2">Anotadores Local</h4>
+                        <div id="modal-home-players" class="space-y-2.5">
+                            <!-- Inputs de goles por jugador -->
+                        </div>
+                        <div class="pt-2 border-t border-slate-200 flex justify-between items-center text-xs text-slate-600">
+                            <span>Goles extra / En contra rival:</span>
+                            <div class="flex items-center space-x-1">
+                                <button type="button" onclick="adjustExtraGoals('home', -1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 font-bold">-</button>
+                                <span id="modal-home-extra" class="w-6 text-center font-bold">0</span>
+                                <button type="button" onclick="adjustExtraGoals('home', 1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 font-bold">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jugadores Visitante -->
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-3">
+                        <h4 id="modal-away-list-title" class="text-xs font-bold uppercase text-slate-700 border-b pb-2">Anotadores Visitante</h4>
+                        <div id="modal-away-players" class="space-y-2.5">
+                            <!-- Inputs de goles por jugador -->
+                        </div>
+                        <div class="pt-2 border-t border-slate-200 flex justify-between items-center text-xs text-slate-600">
+                            <span>Goles extra / En contra rival:</span>
+                            <div class="flex items-center space-x-1">
+                                <button type="button" onclick="adjustExtraGoals('away', -1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 font-bold">-</button>
+                                <span id="modal-away-extra" class="w-6 text-center font-bold">0</span>
+                                <button type="button" onclick="adjustExtraGoals('away', 1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 font-bold">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desempate por Penales (Solo visible en Fase Final si hay empate) -->
+                <div id="modal-tiebreaker-box" class="hidden bg-amber-50 border border-amber-300 p-4 rounded-xl">
+                    <label class="block text-xs font-bold text-amber-900 uppercase mb-2">Empate en Eliminatoria - ¿Quién avanza por penales / gol de oro?</label>
+                    <select id="modal-knockout-winner" class="w-full rounded-lg border-amber-400 border px-3 py-2 text-sm bg-white font-bold text-slate-900">
+                        <!-- Opciones llenadas por JS -->
+                    </select>
+                </div>
+
+                <!-- Selección de Figura del Partido (MVP) -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Figura del Partido (MVP Opcional)</label>
+                    <select id="modal-mvp-select" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm bg-white font-medium">
+                        <option value="">-- Sin elegir figura --</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-slate-100 px-6 py-4 border-t border-slate-200 flex justify-between items-center">
+                <button type="button" onclick="clearMatchResult()" class="text-xs text-[#ff1e42] hover:underline font-bold uppercase tracking-wider">
+                    Marcar como No Jugado
+                </button>
+                <div class="flex space-x-3">
+                    <button type="button" onclick="closeMatchModal()" class="px-4 py-2 rounded-lg text-xs font-bold uppercase text-slate-600 hover:bg-slate-200 transition">
+                        Cancelar
+                    </button>
+                    <button type="button" onclick="saveMatchResult()" class="wc26-cta-btn px-6 py-2.5 rounded-xl font-sport text-lg font-extrabold uppercase tracking-wider shadow transition">
+                        Guardar Resultado Oficial
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Reinicio -->
+    <div id="reset-modal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-center space-y-4">
+            <h3 class="font-sport text-3xl text-slate-900 uppercase">¿Reiniciar Torneo?</h3>
+            <p class="text-xs text-slate-600">Se borrarán los partidos y resultados actuales y volverás a la pantalla de inscripción de equipos.</p>
+            <div class="flex justify-center space-x-3 pt-2">
+                <button onclick="closeResetModal()" class="px-4 py-2 rounded-lg text-xs font-bold uppercase bg-slate-200 text-slate-700">Cancelar</button>
+                <button onclick="confirmResetTournament()" class="px-4 py-2 rounded-lg text-xs font-bold uppercase bg-rose-600 text-white shadow">Sí, Reiniciar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           ESTADO GLOBAL DE LA APLICACIÓN
+           ========================================================================== */
+        let state = {
+            status: 'SETUP', // 'SETUP' | 'ACTIVE'
+            format: 'LEAGUE', // 'LEAGUE' | 'CUP'
+            leagueQualifiers: 4,
+            cupGroupsCount: 2,
+            cupQualifiersPerGroup: 2,
+            teams: [], // { id, name, code, colorBg, colorText, players: [{id, name}] }
+            groups: [], // [ { name: 'Grupo A', teamIds: [] } ]
+            matches: [], // Fase regular
+            knockoutMatches: [] // Eliminatorias: Cuartos, Semis, Final
+        };
+
+        // Variables temporales para el modal de partido
+        let activeMatchId = null;
+        let isKnockoutModal = false;
+        let modalTempGoals = {}; // playerId -> goals
+        let modalExtraGoals = { home: 0, away: 0 };
+
+        // Variables del Cronómetro de Partido
+        let timerInterval = null;
+        let timerBaseMinutes = 10;
+        let timerRemainingSeconds = 600;
+        let timerAddedSeconds = 0;
+        let timerRunning = false;
+
+        /* ==========================================================================
+           INICIALIZACIÓN Y UTILIDADES
+           ========================================================================== */
+        window.onload = function() {
+            const saved = localStorage.getItem('torneo3v3_state');
+            if (saved) {
+                try {
+                    state = JSON.parse(saved);
+                    if (state.status === 'ACTIVE') {
+                        enterTournamentView();
+                    } else {
+                        renderSetupTeams();
+                    }
+                } catch (e) {
+                    console.error("Error leyendo estado guardado", e);
+                }
+            }
+        };
+
+        function saveState() {
+            localStorage.setItem('torneo3v3_state', JSON.stringify(state));
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3200);
+        }
+
+        function uid() {
+            return Math.random().toString(36).substring(2, 9);
+        }
+
+        function getTeam(id) {
+            return state.teams.find(t => t.id === id);
+        }
+
+        function getPlayer(playerId) {
+            for (const t of state.teams) {
+                const p = t.players.find(pl => pl.id === playerId);
+                if (p) return { ...p, team: t };
+            }
+            return null;
+        }
+
+        /* ==========================================================================
+           FASE 1: INSCRIPCIÓN DE EQUIPOS Y CONFIGURACIÓN
+           ========================================================================== */
+        function toggleCustomCountry() {
+            const sel = document.getElementById('country-select').value;
+            const box = document.getElementById('custom-country-box');
+            if (sel === 'CUSTOM') {
+                box.classList.remove('hidden');
+            } else {
+                box.classList.add('hidden');
+            }
+        }
+
+        function updateFormatUI() {
+            const format = document.querySelector('input[name="format-type"]:checked').value;
+            const leagueBox = document.getElementById('league-options');
+            const cupBox = document.getElementById('cup-options');
+            if (format === 'LEAGUE') {
+                leagueBox.classList.remove('hidden');
+                cupBox.classList.add('hidden');
+            } else {
+                leagueBox.classList.add('hidden');
+                cupBox.classList.remove('hidden');
+                updateCupSummary();
+            }
+        }
+
+        function updateCupSummary() {
+            const g = parseInt(document.getElementById('cup-groups').value);
+            const q = parseInt(document.getElementById('cup-qualifiers').value);
+            const totalAdvancing = g * q;
+            let phaseName = "Eliminatorias";
+            if (totalAdvancing === 2) phaseName = "Final Directa (2 equipos)";
+            else if (totalAdvancing === 4) phaseName = "Semifinales (4 equipos)";
+            else if (totalAdvancing === 8) phaseName = "Cuartos de Final (8 equipos)";
+            else if (totalAdvancing === 16) phaseName = "Octavos de Final (16 equipos)";
+
+            document.getElementById('cup-summary-text').textContent = 
+                `Con ${g} grupos pasando ${q} de cada uno, clasifican ${totalAdvancing} equipos a ${phaseName}.`;
+        }
+
+        function addTeam(e) {
+            e.preventDefault();
+            const sel = document.getElementById('country-select').value;
+            let code, name, bg, text;
+
+            if (sel === 'CUSTOM') {
+                name = document.getElementById('custom-country-name').value.trim();
+                code = document.getElementById('custom-country-code').value.trim().toUpperCase();
+                if (!name || !code) {
+                    showToast("Completa el nombre y la sigla del país personalizado.");
+                    return;
+                }
+                bg = '#334155';
+                text = '#ffffff';
+            } else {
+                const parts = sel.split('|');
+                code = parts[0];
+                name = parts[1];
+                bg = parts[2];
+                text = parts[3];
+            }
+
+            // Si ya existe el mismo país, le agregamos distintivo (Ej: Argentina B)
+            const sameCountryCount = state.teams.filter(t => t.name.startsWith(name)).length;
+            if (sameCountryCount > 0) {
+                name = `${name} (${sameCountryCount + 1})`;
+            }
+
+            const p1 = document.getElementById('player1').value.trim();
+            const p2 = document.getElementById('player2').value.trim();
+            const p3 = document.getElementById('player3').value.trim();
+
+            if (!p1 || !p2 || !p3) {
+                showToast("Debes ingresar los 3 jugadores del equipo.");
+                return;
+            }
+
+            const newTeam = {
+                id: 'team_' + uid(),
+                name,
+                code,
+                colorBg: bg,
+                colorText: text,
+                players: [
+                    { id: 'pl_' + uid(), name: p1 },
+                    { id: 'pl_' + uid(), name: p2 },
+                    { id: 'pl_' + uid(), name: p3 }
+                ]
+            };
+
+            state.teams.push(newTeam);
+            saveState();
+            renderSetupTeams();
+
+            // Limpiar inputs de jugadores
+            document.getElementById('player1').value = '';
+            document.getElementById('player2').value = '';
+            document.getElementById('player3').value = '';
+            showToast(`${name} inscrito correctamente.`);
+        }
+
+        function removeTeam(id) {
+            state.teams = state.teams.filter(t => t.id !== id);
+            saveState();
+            renderSetupTeams();
+        }
+
+        function renderSetupTeams() {
+            const grid = document.getElementById('teams-grid');
+            const empty = document.getElementById('empty-teams-state');
+            const badge = document.getElementById('team-count-badge');
+
+            badge.textContent = `${state.teams.length} ${state.teams.length === 1 ? 'Equipo' : 'Equipos'}`;
+
+            if (state.teams.length === 0) {
+                empty.classList.remove('hidden');
+                grid.innerHTML = '';
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.innerHTML = state.teams.map((t, idx) => `
+                <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/70 hover:bg-white hover:shadow-md transition flex flex-col justify-between">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-3">
+                        <div class="flex items-center space-x-2.5">
+                            <span style="background-color:${t.colorBg}; color:${t.colorText}" class="font-sport text-lg font-bold px-2.5 py-0.5 rounded shadow-sm border border-black/10">
+                                ${t.code}
+                            </span>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm leading-tight">${t.name}</h4>
+                                <span class="text-[11px] text-slate-400 font-semibold">Equipo #${idx + 1}</span>
+                            </div>
+                        </div>
+                        <button onclick="removeTeam('${t.id}')" class="text-slate-400 hover:text-rose-600 p-1 transition" title="Eliminar equipo">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+                    <ul class="space-y-1 text-xs text-slate-600 font-medium">
+                        ${t.players.map((p, i) => `
+                            <li class="flex items-center space-x-2">
+                                <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-700 font-bold text-[10px] flex items-center justify-center">${i + 1}</span>
+                                <span class="truncate">${p.name}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        function loadDemoData() {
+            const demoCountries = [
+                { code: 'ARG', name: 'Argentina', bg: '#38bdf8', text: '#ffffff', players: ['Messi', 'Julián', 'Dibu'] },
+                { code: 'BRA', name: 'Brasil', bg: '#facc15', text: '#15803d', players: ['Vinicius', 'Rodrygo', 'Alisson'] },
+                { code: 'FRA', name: 'Francia', bg: '#1e3a8a', text: '#ef4444', players: ['Mbappé', 'Griezmann', 'Saliba'] },
+                { code: 'ESP', name: 'España', bg: '#dc2626', text: '#facc15', players: ['Lamine Yamal', 'Pedri', 'Rodri'] },
+                { code: 'URU', name: 'Uruguay', bg: '#60a5fa', text: '#0f172a', players: ['Valverde', 'Darwin', 'Araújo'] },
+                { code: 'ENG', name: 'Inglaterra', bg: '#f8fafc', text: '#dc2626', players: ['Bellingham', 'Foden', 'Kane'] },
+                { code: 'COL', name: 'Colombia', bg: '#fde047', text: '#1d4ed8', players: ['Luis Díaz', 'James', 'Richard Ríos'] },
+                { code: 'GER', name: 'Alemania', bg: '#171717', text: '#d97706', players: ['Musiala', 'Wirtz', 'Kroos'] }
+            ];
+
+            state.teams = demoCountries.map(c => ({
+                id: 'team_' + uid(),
+                name: c.name,
+                code: c.code,
+                colorBg: c.bg,
+                colorText: c.text,
+                players: c.players.map(pName => ({ id: 'pl_' + uid(), name: pName }))
+            }));
+
+            saveState();
+            renderSetupTeams();
+            showToast("8 Selecciones de prueba cargadas.");
+        }
+
+        /* ==========================================================================
+           SORTEO E INICIO DEL TORNEO
+           ========================================================================== */
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        // Genera un fixture equilibrado por Fechas (Método Round-Robin / Berger)
+        // Garantiza que ningún equipo juegue dos veces en la misma fecha y evita partidos consecutivos entre fechas
+        function generateBalancedSchedule(teamIds, groupName) {
+            let list = shuffleArray(teamIds);
+            const isOdd = list.length % 2 !== 0;
+            if (isOdd) {
+                list.push('BYE'); // Equipo fantasma para fecha libre si son impares
+            }
+
+            const n = list.length;
+            const totalRounds = n - 1;
+            const matchesPerRound = n / 2;
+            let schedule = [];
+            let lastRoundLastPair = [];
+
+            for (let r = 0; r < totalRounds; r++) {
+                let roundMatches = [];
+                for (let i = 0; i < matchesPerRound; i++) {
+                    const home = list[i];
+                    const away = list[n - 1 - i];
+
+                    if (home !== 'BYE' && away !== 'BYE') {
+                        // Alternar localía de forma aleatoria
+                        const swap = Math.random() > 0.5;
+                        roundMatches.push({
+                            id: 'm_' + uid(),
+                            groupName: groupName,
+                            round: r + 1,
+                            homeId: swap ? away : home,
+                            awayId: swap ? home : away,
+                            played: false,
+                            homeScore: 0,
+                            awayScore: 0,
+                            goals: {},
+                            extraGoals: { home: 0, away: 0 },
+                            mvpId: ''
+                        });
+                    }
+                }
+
+                // Mezclar orden de partidos dentro de la misma fecha
+                roundMatches = shuffleArray(roundMatches);
+
+                // Si hay más de 1 partido en la fecha, evitar que los equipos del último partido
+                // de la fecha anterior jueguen en el primer partido de esta nueva fecha
+                if (roundMatches.length > 1 && lastRoundLastPair.length > 0) {
+                    const firstMatch = roundMatches[0];
+                    if (lastRoundLastPair.includes(firstMatch.homeId) || lastRoundLastPair.includes(firstMatch.awayId)) {
+                        const swapIdx = roundMatches.findIndex(m =>
+                            !lastRoundLastPair.includes(m.homeId) && !lastRoundLastPair.includes(m.awayId)
+                        );
+                        if (swapIdx > 0) {
+                            [roundMatches[0], roundMatches[swapIdx]] = [roundMatches[swapIdx], roundMatches[0]];
+                        } else {
+                            // Si no hay combinación totalmente libre (ej. grupos de 4 equipos),
+                            // al menos empujar ese cruce al final de la fecha para maximizar el descanso
+                            roundMatches.push(roundMatches.shift());
+                        }
+                    }
+                }
+
+                if (roundMatches.length > 0) {
+                    const lastM = roundMatches[roundMatches.length - 1];
+                    lastRoundLastPair = [lastM.homeId, lastM.awayId];
+                }
+
+                schedule.push(...roundMatches);
+
+                // Rotar equipos en sentido horario dejando fijo el primero (Algoritmo de Polígono)
+                const last = list.pop();
+                list.splice(1, 0, last);
+            }
+
+            return schedule;
+        }
+
+        function startTournament() {
+            if (state.teams.length < 2) {
+                showToast("Necesitas inscribir al menos 2 equipos para iniciar.");
+                return;
+            }
+
+            const format = document.querySelector('input[name="format-type"]:checked').value;
+            state.format = format;
+            state.leagueQualifiers = parseInt(document.getElementById('league-qualifiers').value);
+            state.cupGroupsCount = parseInt(document.getElementById('cup-groups').value);
+            state.cupQualifiersPerGroup = parseInt(document.getElementById('cup-qualifiers').value);
+
+            if (format === 'CUP' && state.teams.length < state.cupGroupsCount * 2) {
+                showToast(`Para ${state.cupGroupsCount} grupos se recomienda al menos ${state.cupGroupsCount * 2} equipos.`);
+            }
+
+            // Mezclar equipos aleatoriamente para el sorteo
+            const shuffledTeams = shuffleArray(state.teams);
+            state.groups = [];
+            state.matches = [];
+            state.knockoutMatches = [];
+
+            if (format === 'LEAGUE') {
+                state.groups.push({
+                    name: 'Liga General',
+                    teamIds: shuffledTeams.map(t => t.id)
+                });
+            } else {
+                const groupLetters = ['A', 'B', 'C', 'D'];
+                for (let g = 0; g < state.cupGroupsCount; g++) {
+                    state.groups.push({
+                        name: `Grupo ${groupLetters[g]}`,
+                        teamIds: []
+                    });
+                }
+                // Repartir equipos equitativamente
+                shuffledTeams.forEach((team, index) => {
+                    const groupIndex = index % state.cupGroupsCount;
+                    state.groups[groupIndex].teamIds.push(team.id);
+                });
+            }
+
+            // Generar partidos por Fechas equilibradas dentro de cada grupo/liga
+            state.groups.forEach(group => {
+                const groupMatches = generateBalancedSchedule(group.teamIds, group.name);
+                state.matches.push(...groupMatches);
+            });
+
+            state.status = 'ACTIVE';
+            saveState();
+            enterTournamentView();
+            showToast("¡Sorteo por fechas completado! Torneo en marcha.");
+        }
+
+        function enterTournamentView() {
+            document.getElementById('setup-view').classList.add('hidden');
+            document.getElementById('tournament-view').classList.remove('hidden');
+            document.getElementById('main-nav').classList.remove('hidden');
+            document.getElementById('mobile-nav').classList.remove('hidden');
+            document.getElementById('btn-demo').classList.add('hidden');
+            document.getElementById('btn-reset').classList.remove('hidden');
+
+            document.getElementById('header-status').textContent = 
+                state.format === 'LEAGUE' ? 'Formato Liga (Todos contra Todos)' : `Formato Copa (${state.cupGroupsCount} Grupos)`;
+
+            renderAllTournamentViews();
+        }
+
+        function renderAllTournamentViews() {
+            renderMatches();
+            renderStandings();
+            renderStats();
+            renderKnockout();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Actualizar botones desktop estilo FIFA 26
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn font-sport text-lg tracking-wider px-5 py-1.5 rounded-lg font-bold text-slate-200 hover:text-white hover:bg-white/10 transition-all";
+            });
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.className = "nav-btn font-sport text-lg tracking-wider px-5 py-1.5 rounded-lg font-extrabold transition-all bg-[#00e676] text-slate-950 shadow-sm";
+            }
+
+            // Actualizar botones mobile
+            document.querySelectorAll('.nav-btn-m').forEach(btn => {
+                btn.className = "nav-btn-m font-sport text-base tracking-wider px-3.5 py-1 rounded font-bold text-slate-300";
+            });
+            const activeBtnM = document.getElementById('m-btn-' + tabId);
+            if (activeBtnM) {
+                activeBtnM.className = "nav-btn-m font-sport text-base tracking-wider px-3.5 py-1 rounded font-extrabold bg-[#00e676] text-slate-950";
+            }
+
+            renderAllTournamentViews();
+        }
+
+        /* ==========================================================================
+           RENDERIZADO DE PARTIDOS (FIXTURE)
+           ========================================================================== */
+        function renderMatches() {
+            const container = document.getElementById('matches-container');
+            const playedCount = state.matches.filter(m => m.played).length;
+            document.getElementById('matches-progress').textContent = `${playedCount} / ${state.matches.length} Jugados`;
+
+            // Agrupar por groupName
+            const htmlGroups = state.groups.map(group => {
+                const groupMatches = state.matches.filter(m => m.groupName === group.name);
+                
+                const matchesHtml = groupMatches.map((m, idx) => {
+                    const home = getTeam(m.homeId);
+                    const away = getTeam(m.awayId);
+                    if (!home || !away) return '';
+
+                    // Resumen de goleadores para mostrar debajo del partido
+                    let scorersSummary = [];
+                    if (m.played && m.goals) {
+                        Object.entries(m.goals).forEach(([pid, qty]) => {
+                            if (qty > 0) {
+                                const pInfo = getPlayer(pid);
+                                if (pInfo) scorersSummary.push(`${pInfo.name} (${qty})`);
+                            }
+                        });
+                    }
+                    const mvpInfo = m.mvpId ? getPlayer(m.mvpId) : null;
+
+                    return `
+                        <div onclick="openMatchModal('${m.id}', false)" class="cursor-pointer border-2 ${m.played ? 'border-slate-200 bg-white' : 'border-slate-200/80 bg-slate-50/70'} hover:border-[#00b4d8] rounded-xl p-3.5 transition shadow-sm hover:shadow-md">
+                            <div class="flex justify-between items-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">
+                                <span>${m.round ? `Fecha ${m.round} • ` : ''}Partido #${idx + 1}</span>
+                                <span class="${m.played ? 'text-slate-950 bg-[#00e676] px-2 py-0.5 rounded' : 'text-[#ff1e42] bg-[#ff1e42]/10 px-2 py-0.5 rounded'}">
+                                    ${m.played ? 'Finalizado' : 'Por Jugar'}
+                                </span>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <!-- Local -->
+                                <div class="flex items-center space-x-2.5 flex-1">
+                                    <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm">
+                                        ${home.code}
+                                    </span>
+                                    <span class="font-sport text-xl font-extrabold text-slate-900 truncate">${home.name}</span>
+                                </div>
+
+                                <!-- Marcador estilo TV FIFA 26 -->
+                                <div class="px-3 flex items-center space-x-1.5">
+                                    ${m.played ? `
+                                        <span class="font-sport text-2xl font-black w-8 py-0.5 rounded bg-slate-950 text-center ${m.homeScore > m.awayScore ? 'text-[#00e676]' : 'text-white'}">${m.homeScore}</span>
+                                        <span class="text-xs text-slate-400 font-bold">:</span>
+                                        <span class="font-sport text-2xl font-black w-8 py-0.5 rounded bg-slate-950 text-center ${m.awayScore > m.homeScore ? 'text-[#00e676]' : 'text-white'}">${m.awayScore}</span>
+                                    ` : `
+                                        <span class="font-sport text-sm font-black text-white bg-slate-950 px-3 py-1 rounded tracking-widest">VS</span>
+                                    `}
+                                </div>
+
+                                <!-- Visitante -->
+                                <div class="flex items-center justify-end space-x-2.5 flex-1 text-right">
+                                    <span class="font-sport text-xl font-extrabold text-slate-900 truncate">${away.name}</span>
+                                    <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm">
+                                        ${away.code}
+                                    </span>
+                                </div>
+                            </div>
+
+                            ${m.played && (scorersSummary.length > 0 || mvpInfo) ? `
+                                <div class="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap justify-between items-center gap-2 text-[11px] text-slate-500">
+                                    <div class="truncate">
+                                        ${scorersSummary.length > 0 ? `<strong class="text-slate-800 uppercase">Goles:</strong> ${scorersSummary.join(', ')}` : 'Sin goles de jugadores registrados'}
+                                    </div>
+                                    ${mvpInfo ? `<span class="bg-[#090a0f] text-[#00b4d8] font-extrabold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">MVP: ${mvpInfo.name}</span>` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden ${state.format === 'LEAGUE' ? 'md:col-span-2' : ''}">
+                        <div class="wc26-panel-header px-5 py-3.5 flex justify-between items-center">
+                            <h3 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">${group.name}</h3>
+                            <span class="text-xs text-[#00e676] font-extrabold uppercase tracking-wider">${groupMatches.length} Partidos</span>
+                        </div>
+                        <div class="p-4 grid grid-cols-1 ${state.format === 'LEAGUE' ? 'md:grid-cols-2' : ''} gap-3">
+                            ${matchesHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = htmlGroups;
+        }
+
+        /* ==========================================================================
+           MODAL DE PARTIDO (CARGA DE GOLES Y MVP)
+           ========================================================================== */
+        function openMatchModal(matchId, isKnockout = false) {
+            activeMatchId = matchId;
+            isKnockoutModal = isKnockout;
+
+            const matchList = isKnockout ? state.knockoutMatches : state.matches;
+            const match = matchList.find(m => m.id === matchId);
+            if (!match) return;
+
+            const home = getTeam(match.homeId);
+            const away = getTeam(match.awayId);
+            if (!home || !away) {
+                showToast("Aún no están definidos ambos equipos para este cruce.");
+                return;
+            }
+
+            // Clonar goles actuales
+            modalTempGoals = { ...(match.goals || {}) };
+            modalExtraGoals = { ...(match.extraGoals || { home: 0, away: 0 }) };
+
+            document.getElementById('modal-match-label').textContent = 
+                match.groupName ? `${match.groupName}${match.round ? ` • Fecha ${match.round}` : ''}` : match.stageName;
+            
+            const homeBadge = document.getElementById('modal-home-badge');
+            homeBadge.textContent = home.code;
+            homeBadge.style.backgroundColor = home.colorBg;
+            homeBadge.style.color = home.colorText;
+            document.getElementById('modal-home-name').textContent = home.name;
+            document.getElementById('modal-home-list-title').textContent = `Jugadores ${home.name}`;
+
+            const awayBadge = document.getElementById('modal-away-badge');
+            awayBadge.textContent = away.code;
+            awayBadge.style.backgroundColor = away.colorBg;
+            awayBadge.style.color = away.colorText;
+            document.getElementById('modal-away-name').textContent = away.name;
+            document.getElementById('modal-away-list-title').textContent = `Jugadores ${away.name}`;
+
+            renderModalPlayerInputs(home, 'modal-home-players');
+            renderModalPlayerInputs(away, 'modal-away-players');
+
+            // Poblar selector MVP
+            const mvpSelect = document.getElementById('modal-mvp-select');
+            const allMatchPlayers = [
+                ...home.players.map(p => ({ ...p, teamCode: home.code })),
+                ...away.players.map(p => ({ ...p, teamCode: away.code }))
+            ];
+            mvpSelect.innerHTML = `<option value="">-- Sin elegir figura --</option>` + 
+                allMatchPlayers.map(p => `<option value="${p.id}" ${match.mvpId === p.id ? 'selected' : ''}>${p.name} (${p.teamCode})</option>`).join('');
+
+            // Poblar selector de desempate en caso de Knockout
+            const winnerSelect = document.getElementById('modal-knockout-winner');
+            winnerSelect.innerHTML = `
+                <option value="${home.id}" ${match.penaltyWinnerId === home.id ? 'selected' : ''}>Avanza ${home.name}</option>
+                <option value="${away.id}" ${match.penaltyWinnerId === away.id ? 'selected' : ''}>Avanza ${away.name}</option>
+            `;
+
+            recalculateModalScores();
+            resetMatchTimer();
+            document.getElementById('match-modal').classList.remove('hidden');
+        }
+
+        /* ==========================================================================
+           CRONÓMETRO DE PARTIDO (10 MIN + ADICIÓN)
+           ========================================================================== */
+        function playWhistleSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(2800, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(2400, ctx.currentTime + 0.15);
+                osc.frequency.exponentialRampToValueAtTime(2850, ctx.currentTime + 0.35);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.6);
+            } catch (e) {}
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerRemainingSeconds / 60);
+            const secs = timerRemainingSeconds % 60;
+            const display = document.getElementById('timer-display');
+            const statusLabel = document.getElementById('timer-status-label');
+            const addedBadge = document.getElementById('timer-added-badge');
+            const toggleBtn = document.getElementById('btn-timer-toggle');
+
+            display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+            // Color según estado del reloj
+            if (timerRemainingSeconds === 0) {
+                display.className = "font-sport text-3xl sm:text-4xl font-black tracking-wider text-[#ff1e42] leading-none animate-pulse";
+                statusLabel.textContent = "¡Tiempo Cumplido!";
+                statusLabel.className = "text-[11px] font-extrabold uppercase tracking-widest text-[#ff1e42]";
+            } else if (timerRemainingSeconds <= 60) {
+                display.className = "font-sport text-3xl sm:text-4xl font-black tracking-wider text-amber-400 leading-none";
+                statusLabel.textContent = "Último Minuto";
+                statusLabel.className = "text-[11px] font-extrabold uppercase tracking-widest text-amber-400";
+            } else {
+                display.className = "font-sport text-3xl sm:text-4xl font-black tracking-wider text-[#00e676] leading-none";
+                statusLabel.textContent = timerRunning ? "En Juego" : "Tiempo Reglamentario";
+                statusLabel.className = "text-[11px] font-extrabold uppercase tracking-widest text-slate-400";
+            }
+
+            if (timerAddedSeconds > 0) {
+                const addedMins = Math.floor(timerAddedSeconds / 60);
+                const addedRemSecs = timerAddedSeconds % 60;
+                addedBadge.textContent = addedRemSecs === 0 ? `+${addedMins}m` : `+${addedMins}:${String(addedRemSecs).padStart(2, '0')}`;
+                addedBadge.classList.remove('hidden');
+            } else {
+                addedBadge.classList.add('hidden');
+            }
+
+            if (timerRunning) {
+                toggleBtn.textContent = "Pausar";
+                toggleBtn.className = "bg-amber-400 hover:bg-amber-300 text-slate-950 font-sport text-base font-extrabold uppercase tracking-wider px-3.5 py-1.5 rounded-lg transition shadow";
+            } else {
+                toggleBtn.textContent = timerRemainingSeconds < (timerBaseMinutes * 60 + timerAddedSeconds) && timerRemainingSeconds > 0 ? "Reanudar" : "Iniciar";
+                toggleBtn.className = "bg-[#00e676] hover:bg-[#00c865] text-slate-950 font-sport text-base font-extrabold uppercase tracking-wider px-3.5 py-1.5 rounded-lg transition shadow";
+            }
+        }
+
+        function toggleMatchTimer() {
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                updateTimerDisplay();
+                return;
+            }
+
+            if (timerRemainingSeconds <= 0) {
+                showToast("El tiempo llegó a 00:00. Agrega tiempo extra (+1m) o reinicia el reloj.");
+                return;
+            }
+
+            timerRunning = true;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timerRemainingSeconds > 0) {
+                    timerRemainingSeconds--;
+                    updateTimerDisplay();
+                    if (timerRemainingSeconds === 0) {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        updateTimerDisplay();
+                        playWhistleSound();
+                        showToast("¡Final del tiempo reglamentario!");
+                    }
+                }
+            }, 1000);
+        }
+
+        function resetMatchTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerAddedSeconds = 0;
+            timerRemainingSeconds = timerBaseMinutes * 60;
+            updateTimerDisplay();
+        }
+
+        function changeBaseDuration(deltaMins) {
+            if (timerRunning) {
+                showToast("Pausa el cronómetro antes de cambiar la duración base.");
+                return;
+            }
+            timerBaseMinutes = Math.max(1, Math.min(45, timerBaseMinutes + deltaMins));
+            timerAddedSeconds = 0;
+            timerRemainingSeconds = timerBaseMinutes * 60;
+            updateTimerDisplay();
+        }
+
+        function addExtraTime(seconds) {
+            timerAddedSeconds += seconds;
+            timerRemainingSeconds += seconds;
+            updateTimerDisplay();
+            const label = seconds >= 60 ? `+${seconds / 60} min` : `+${seconds} seg`;
+            showToast(`Tiempo adicionado: ${label}`);
+        }
+
+        function renderModalPlayerInputs(team, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = team.players.map(p => {
+                const count = modalTempGoals[p.id] || 0;
+                return `
+                    <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
+                        <span class="text-xs font-bold text-slate-800 truncate pr-2">${p.name}</span>
+                        <div class="flex items-center space-x-2">
+                            <button type="button" onclick="changePlayerGoal('${p.id}', -1)" class="w-7 h-7 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm flex items-center justify-center transition">-</button>
+                            <span id="goal-count-${p.id}" class="w-6 text-center font-sport text-xl font-bold text-emerald-700">${count}</span>
+                            <button type="button" onclick="changePlayerGoal('${p.id}', 1)" class="w-7 h-7 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center justify-center transition">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function changePlayerGoal(playerId, delta) {
+            const current = modalTempGoals[playerId] || 0;
+            const next = Math.max(0, current + delta);
+            modalTempGoals[playerId] = next;
+            const el = document.getElementById(`goal-count-${playerId}`);
+            if (el) el.textContent = next;
+            recalculateModalScores();
+        }
+
+        function adjustExtraGoals(side, delta) {
+            modalExtraGoals[side] = Math.max(0, (modalExtraGoals[side] || 0) + delta);
+            recalculateModalScores();
+        }
+
+        function recalculateModalScores() {
+            const matchList = isKnockoutModal ? state.knockoutMatches : state.matches;
+            const match = matchList.find(m => m.id === activeMatchId);
+            if (!match) return;
+
+            const home = getTeam(match.homeId);
+            const away = getTeam(match.awayId);
+
+            let homeSum = modalExtraGoals.home || 0;
+            home.players.forEach(p => { homeSum += (modalTempGoals[p.id] || 0); });
+
+            let awaySum = modalExtraGoals.away || 0;
+            away.players.forEach(p => { awaySum += (modalTempGoals[p.id] || 0); });
+
+            document.getElementById('modal-home-extra').textContent = modalExtraGoals.home || 0;
+            document.getElementById('modal-away-extra').textContent = modalExtraGoals.away || 0;
+
+            document.getElementById('modal-home-score').textContent = homeSum;
+            document.getElementById('modal-away-score').textContent = awaySum;
+
+            // Si es partido eliminatorio y están empatados, mostrar selector de ganador
+            const tieBox = document.getElementById('modal-tiebreaker-box');
+            if (isKnockoutModal && homeSum === awaySum) {
+                tieBox.classList.remove('hidden');
+            } else {
+                tieBox.classList.add('hidden');
+            }
+        }
+
+        function saveMatchResult() {
+            const matchList = isKnockoutModal ? state.knockoutMatches : state.matches;
+            const match = matchList.find(m => m.id === activeMatchId);
+            if (!match) return;
+
+            const homeScore = parseInt(document.getElementById('modal-home-score').textContent);
+            const awayScore = parseInt(document.getElementById('modal-away-score').textContent);
+
+            match.played = true;
+            match.homeScore = homeScore;
+            match.awayScore = awayScore;
+            match.goals = { ...modalTempGoals };
+            match.extraGoals = { ...modalExtraGoals };
+            match.mvpId = document.getElementById('modal-mvp-select').value;
+
+            if (isKnockoutModal) {
+                if (homeScore > awayScore) match.winnerId = match.homeId;
+                else if (awayScore > homeScore) match.winnerId = match.awayId;
+                else {
+                    const penWinner = document.getElementById('modal-knockout-winner').value;
+                    match.penaltyWinnerId = penWinner;
+                    match.winnerId = penWinner;
+                }
+                advanceKnockoutWinners();
+            }
+
+            saveState();
+            closeMatchModal();
+            renderAllTournamentViews();
+            showToast("Resultado y estadísticas actualizadas.");
+        }
+
+        function clearMatchResult() {
+            const matchList = isKnockoutModal ? state.knockoutMatches : state.matches;
+            const match = matchList.find(m => m.id === activeMatchId);
+            if (!match) return;
+
+            match.played = false;
+            match.homeScore = 0;
+            match.awayScore = 0;
+            match.goals = {};
+            match.extraGoals = { home: 0, away: 0 };
+            match.mvpId = '';
+            match.winnerId = null;
+
+            saveState();
+            closeMatchModal();
+            renderAllTournamentViews();
+            showToast("El partido fue marcado como pendiente.");
+        }
+
+        function closeMatchModal() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            document.getElementById('match-modal').classList.add('hidden');
+            activeMatchId = null;
+        }
+
+        /* ==========================================================================
+           TABLAS DE POSICIONES Y CÁLCULO DE CLASIFICADOS
+           ========================================================================== */
+        function calculateGroupStandings(group) {
+            const stats = {};
+            group.teamIds.forEach(id => {
+                const t = getTeam(id);
+                if (t) {
+                    stats[id] = {
+                        team: t,
+                        pj: 0, pg: 0, pe: 0, pp: 0,
+                        gf: 0, gc: 0, dg: 0, pts: 0
+                    };
+                }
+            });
+
+            const groupMatches = state.matches.filter(m => m.groupName === group.name && m.played);
+            groupMatches.forEach(m => {
+                const h = stats[m.homeId];
+                const a = stats[m.awayId];
+                if (!h || !a) return;
+
+                h.pj++; a.pj++;
+                h.gf += m.homeScore; h.gc += m.awayScore;
+                a.gf += m.awayScore; a.gc += m.homeScore;
+
+                if (m.homeScore > m.awayScore) {
+                    h.pg++; h.pts += 3;
+                    a.pp++;
+                } else if (m.awayScore > m.homeScore) {
+                    a.pg++; a.pts += 3;
+                    h.pp++;
+                } else {
+                    h.pe++; a.pe++;
+                    h.pts += 1; a.pts += 1;
+                }
+            });
+
+            Object.values(stats).forEach(s => {
+                s.dg = s.gf - s.gc;
+            });
+
+            return Object.values(stats).sort((a, b) => {
+                if (b.pts !== a.pts) return b.pts - a.pts;
+                if (b.dg !== a.dg) return b.dg - a.dg;
+                return b.gf - a.gf;
+            });
+        }
+
+        function renderStandings() {
+            const container = document.getElementById('standings-container');
+            const cutoff = state.format === 'LEAGUE' ? state.leagueQualifiers : state.cupQualifiersPerGroup;
+
+            document.getElementById('qualification-legend').textContent = 
+                cutoff > 0 ? `Los primeros ${cutoff} clasifican a la Fase Eliminatoria` : `El 1° de la tabla se consagra Campeón`;
+
+            container.innerHTML = state.groups.map(group => {
+                const rows = calculateGroupStandings(group);
+                return `
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden">
+                        <div class="wc26-panel-header px-6 py-4 flex justify-between items-center">
+                            <h3 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">${group.name}</h3>
+                            <span class="text-xs text-[#00e676] font-extrabold uppercase tracking-wider">
+                                ${cutoff > 0 ? `Clasifican Top ${cutoff}` : 'Título Directo'}
+                            </span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-950/5 text-slate-700 font-sport text-base tracking-wider uppercase border-b border-slate-200">
+                                        <th class="py-3 px-4 font-extrabold w-12 text-center">Pos</th>
+                                        <th class="py-3 px-4 font-extrabold">Selección</th>
+                                        <th class="py-3 px-3 font-extrabold text-center">PJ</th>
+                                        <th class="py-3 px-3 font-extrabold text-center">G</th>
+                                        <th class="py-3 px-3 font-extrabold text-center">E</th>
+                                        <th class="py-3 px-3 font-extrabold text-center">P</th>
+                                        <th class="py-3 px-3 font-extrabold text-center">GF</th>
+                                        <th class="py-3 px-3 font-extrabold text-center">GC</th>
+                                        <th class="py-3 px-3 font-extrabold text-center">DG</th>
+                                        <th class="py-3 px-4 font-black text-center bg-slate-950 text-[#00e676]">PTS</th>
+                                        <th class="py-3 px-4 font-extrabold text-right">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-sm">
+                                    ${rows.map((r, idx) => {
+                                        const pos = idx + 1;
+                                        const isQualifying = cutoff > 0 ? pos <= cutoff : pos === 1;
+                                        return `
+                                            <tr class="${isQualifying ? 'bg-[#00e676]/5' : ''} hover:bg-slate-50 transition">
+                                                <td class="py-3.5 px-4 font-bold text-center">
+                                                    <span class="w-6 h-6 rounded-md font-sport text-base inline-flex items-center justify-center font-black ${isQualifying ? 'bg-[#00e676] text-slate-950' : 'bg-slate-200 text-slate-700'}">
+                                                        ${pos}
+                                                    </span>
+                                                </td>
+                                                <td class="py-3.5 px-4">
+                                                    <div class="flex items-center space-x-3">
+                                                        <span style="background-color:${r.team.colorBg}; color:${r.team.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm">
+                                                            ${r.team.code}
+                                                        </span>
+                                                        <div>
+                                                            <div class="font-sport text-xl font-extrabold text-slate-950 leading-none">${r.team.name}</div>
+                                                            <div class="text-[11px] text-slate-400 mt-0.5">${r.team.players.map(p => p.name).join(', ')}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3.5 px-3 text-center font-bold">${r.pj}</td>
+                                                <td class="py-3.5 px-3 text-center text-emerald-700 font-bold">${r.pg}</td>
+                                                <td class="py-3.5 px-3 text-center text-slate-500 font-semibold">${r.pe}</td>
+                                                <td class="py-3.5 px-3 text-center text-[#ff1e42] font-semibold">${r.pp}</td>
+                                                <td class="py-3.5 px-3 text-center text-slate-600">${r.gf}</td>
+                                                <td class="py-3.5 px-3 text-center text-slate-600">${r.gc}</td>
+                                                <td class="py-3.5 px-3 text-center font-bold ${r.dg > 0 ? 'text-emerald-700' : r.dg < 0 ? 'text-[#ff1e42]' : 'text-slate-500'}">
+                                                    ${r.dg > 0 ? '+' + r.dg : r.dg}
+                                                </td>
+                                                <td class="py-3.5 px-4 text-center font-sport text-2xl font-black bg-slate-950 text-white">${r.pts}</td>
+                                                <td class="py-3.5 px-4 text-right">
+                                                    ${isQualifying ? `
+                                                        <span class="inline-block bg-[#00e676] text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider">
+                                                            ${cutoff === 0 ? 'Líder Campeón' : 'Clasificando'}
+                                                        </span>
+                                                    ` : `
+                                                        <span class="text-xs text-slate-400 font-semibold">Eliminado</span>
+                                                    `}
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* ==========================================================================
+           GOLEADORES Y ESTADÍSTICAS
+           ========================================================================== */
+        function renderStats() {
+            const goalsMap = {};
+            const mvpMap = {};
+
+            // Inicializar todos los jugadores con 0
+            state.teams.forEach(t => {
+                t.players.forEach(p => {
+                    goalsMap[p.id] = 0;
+                    mvpMap[p.id] = 0;
+                });
+            });
+
+            const allPlayed = [
+                ...state.matches.filter(m => m.played),
+                ...state.knockoutMatches.filter(m => m.played)
+            ];
+
+            allPlayed.forEach(m => {
+                if (m.goals) {
+                    Object.entries(m.goals).forEach(([pid, qty]) => {
+                        if (goalsMap[pid] !== undefined) goalsMap[pid] += qty;
+                    });
+                }
+                if (m.mvpId && mvpMap[m.mvpId] !== undefined) {
+                    mvpMap[m.mvpId] += 1;
+                }
+            });
+
+            // Ordenar goleadores
+            const scorersList = Object.entries(goalsMap)
+                .map(([pid, goals]) => ({ ...getPlayer(pid), goals }))
+                .filter(item => item.goals > 0)
+                .sort((a, b) => b.goals - a.goals);
+
+            const scorersBody = document.getElementById('scorers-tbody');
+            if (scorersList.length === 0) {
+                scorersBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-400 text-xs">Aún no se han registrado goles individuales en el torneo.</td></tr>`;
+            } else {
+                scorersBody.innerHTML = scorersList.map((s, idx) => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-4 font-bold text-center text-slate-500">${idx + 1}</td>
+                        <td class="py-3 px-4 font-bold text-slate-900">${s.name}</td>
+                        <td class="py-3 px-4">
+                            <span style="background-color:${s.team.colorBg}; color:${s.team.colorText}" class="font-sport text-xs font-bold px-2 py-0.5 rounded mr-1.5">
+                                ${s.team.code}
+                            </span>
+                            <span class="text-xs text-slate-600 font-medium">${s.team.name}</span>
+                        </td>
+                        <td class="py-3 px-4 text-center font-sport text-2xl font-bold text-emerald-700">${s.goals}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Ordenar MVPs
+            const mvpList = Object.entries(mvpMap)
+                .map(([pid, count]) => ({ ...getPlayer(pid), count }))
+                .filter(item => item.count > 0)
+                .sort((a, b) => b.count - a.count);
+
+            const mvpBody = document.getElementById('mvp-tbody');
+            if (mvpList.length === 0) {
+                mvpBody.innerHTML = `<tr><td colspan="2" class="py-8 text-center text-slate-400 text-xs">Aún no se han elegido figuras en los partidos.</td></tr>`;
+            } else {
+                mvpBody.innerHTML = mvpList.map(m => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-slate-900">${m.name}</div>
+                            <div class="text-[11px] text-slate-500">${m.team.name} (${m.team.code})</div>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <span class="bg-amber-100 text-amber-900 font-extrabold px-2.5 py-1 rounded-full text-xs">${m.count} MVP</span>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        /* ==========================================================================
+           FASE ELIMINATORIA (CUARTOS, SEMIS, FINAL)
+           ========================================================================== */
+        function generateKnockoutPhase(forceRebuild = false) {
+            if (!forceRebuild && state.knockoutMatches.length > 0) {
+                switchTab('tab-knockout');
+                return;
+            }
+
+            let qualifiedTeams = [];
+
+            if (state.format === 'LEAGUE') {
+                const table = calculateGroupStandings(state.groups[0]);
+                const qCount = state.leagueQualifiers;
+                if (qCount === 0) {
+                    state.knockoutMatches = [];
+                    saveState();
+                    switchTab('tab-knockout');
+                    return;
+                }
+                qualifiedTeams = table.slice(0, qCount).map(r => r.team.id);
+            } else {
+                // Formato Copa: Recoger los clasificados de cada grupo con cruces oficiales entre grupos distintos
+                const groupTables = state.groups.map(g => calculateGroupStandings(g));
+                const qPerGroup = state.cupQualifiersPerGroup;
+
+                if (state.cupGroupsCount === 2) {
+                    const gA = groupTables[0] || [];
+                    const gB = groupTables[1] || [];
+                    if (qPerGroup === 1 && gA[0] && gB[0]) {
+                        // Final directa: 1A vs 1B
+                        qualifiedTeams = [gA[0].team.id, gB[0].team.id];
+                    } else if (qPerGroup === 2 && gA.length >= 2 && gB.length >= 2) {
+                        // Semis cruzadas (recordar que el armado usa [0] vs [3] y [1] vs [2]):
+                        // Semi 1: 1A [0] vs 2B [3] | Semi 2: 1B [1] vs 2A [2]
+                        qualifiedTeams = [gA[0].team.id, gB[0].team.id, gA[1].team.id, gB[1].team.id];
+                    } else if (qPerGroup === 4 && gA.length >= 4 && gB.length >= 4) {
+                        // Cuartos cruzados (el armado usa [i] vs [7 - i]):
+                        // QF1: 1A [0] vs 4B [7] | QF2: 2B [1] vs 3A [6] | QF3: 1B [2] vs 4A [5] | QF4: 2A [3] vs 3B [4]
+                        qualifiedTeams = [
+                            gA[0].team.id, gB[1].team.id, gB[0].team.id, gA[1].team.id,
+                            gB[2].team.id, gA[3].team.id, gA[2].team.id, gB[3].team.id
+                        ];
+                    }
+                } else if (state.cupGroupsCount === 4) {
+                    const gA = groupTables[0] || [];
+                    const gB = groupTables[1] || [];
+                    const gC = groupTables[2] || [];
+                    const gD = groupTables[3] || [];
+                    if (qPerGroup === 1 && gA[0] && gB[0] && gC[0] && gD[0]) {
+                        // Semis cruzadas: 1A vs 1B y 1C vs 1D
+                        qualifiedTeams = [gA[0].team.id, gC[0].team.id, gD[0].team.id, gB[0].team.id];
+                    } else if (qPerGroup === 2 && gA.length >= 2 && gB.length >= 2 && gC.length >= 2 && gD.length >= 2) {
+                        // Cuartos cruzados estilo Mundial:
+                        // QF1: 1A [0] vs 2B [7] | QF2: 1C [1] vs 2D [6] | QF3: 1B [2] vs 2A [5] | QF4: 1D [3] vs 2C [4]
+                        qualifiedTeams = [
+                            gA[0].team.id, gC[0].team.id, gB[0].team.id, gD[0].team.id,
+                            gC[1].team.id, gA[1].team.id, gD[1].team.id, gB[1].team.id
+                        ];
+                    }
+                }
+                
+                // Fallback general si faltan equipos en algún grupo
+                if (qualifiedTeams.length === 0) {
+                    let allQualifiers = [];
+                    groupTables.forEach(table => {
+                        allQualifiers.push(...table.slice(0, qPerGroup));
+                    });
+                    allQualifiers.sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf);
+                    qualifiedTeams = allQualifiers.map(r => r.team.id);
+                }
+            }
+
+            state.knockoutMatches = [];
+            const total = qualifiedTeams.length;
+
+            if (total >= 8) {
+                // Cuartos de Final (4 partidos) + Semis (2) + Final (1)
+                for (let i = 0; i < 4; i++) {
+                    state.knockoutMatches.push({
+                        id: `ko_qf_${i}`,
+                        stage: 'QF',
+                        stageName: `Cuartos de Final #${i + 1}`,
+                        homeId: qualifiedTeams[i] || null,
+                        awayId: qualifiedTeams[7 - i] || null,
+                        played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
+                    });
+                }
+                for (let i = 0; i < 2; i++) {
+                    state.knockoutMatches.push({
+                        id: `ko_sf_${i}`,
+                        stage: 'SF',
+                        stageName: `Semifinal #${i + 1}`,
+                        homeId: null, awayId: null,
+                        played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
+                    });
+                }
+                state.knockoutMatches.push({
+                    id: `ko_f_0`,
+                    stage: 'F',
+                    stageName: `Gran Final`,
+                    homeId: null, awayId: null,
+                    played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
+                });
+            } else if (total >= 4) {
+                // Semifinales (2 partidos) + Final (1)
+                state.knockoutMatches.push({
+                    id: `ko_sf_0`,
+                    stage: 'SF',
+                    stageName: `Semifinal 1`,
+                    homeId: qualifiedTeams[0] || null,
+                    awayId: qualifiedTeams[3] || null,
+                    played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
+                });
+                state.knockoutMatches.push({
+                    id: `ko_sf_1`,
+                    stage: 'SF',
+                    stageName: `Semifinal 2`,
+                    homeId: qualifiedTeams[1] || null,
+                    awayId: qualifiedTeams[2] || null,
+                    played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
+                });
+                state.knockoutMatches.push({
+                    id: `ko_f_0`,
+                    stage: 'F',
+                    stageName: `Gran Final`,
+                    homeId: null, awayId: null,
+                    played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
+                });
+            } else if (total >= 2) {
+                // Final Directa
+                state.knockoutMatches.push({
+                    id: `ko_f_0`,
+                    stage: 'F',
+                    stageName: `Gran Final`,
+                    homeId: qualifiedTeams[0] || null,
+                    awayId: qualifiedTeams[1] || null,
+                    played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
+                });
+            }
+
+            saveState();
+            switchTab('tab-knockout');
+            showToast("Cruces de Fase Final actualizados según las posiciones actuales.");
+        }
+
+        function advanceKnockoutWinners() {
+            const qf = state.knockoutMatches.filter(m => m.stage === 'QF');
+            const sf = state.knockoutMatches.filter(m => m.stage === 'SF');
+            const fin = state.knockoutMatches.find(m => m.stage === 'F');
+
+            if (qf.length === 4 && sf.length === 2) {
+                sf[0].homeId = qf[0].winnerId || null;
+                sf[0].awayId = qf[1].winnerId || null;
+                sf[1].homeId = qf[2].winnerId || null;
+                sf[1].awayId = qf[3].winnerId || null;
+            }
+
+            if (sf.length === 2 && fin) {
+                fin.homeId = sf[0].winnerId || null;
+                fin.awayId = sf[1].winnerId || null;
+            }
+        }
+
+        function renderKnockout() {
+            const container = document.getElementById('knockout-container');
+            const banner = document.getElementById('champion-banner');
+            banner.classList.add('hidden');
+
+            // Si es Liga sin playoffs, mostrar directo al líder
+            if (state.format === 'LEAGUE' && state.leagueQualifiers === 0) {
+                const table = calculateGroupStandings(state.groups[0]);
+                if (table.length > 0 && table[0].pj > 0) {
+                    const champ = table[0].team;
+                    banner.classList.remove('hidden');
+                    document.getElementById('champion-name').textContent = champ.name;
+                    document.getElementById('champion-players').textContent = `Plantel Campeón: ${champ.players.map(p => p.name).join(' - ')}`;
+                }
+                container.innerHTML = `<div class="col-span-3 bg-white p-8 rounded-xl text-center text-slate-500 text-sm border border-slate-200">El torneo está configurado como Liga directa (el 1° de la tabla es campeón sin eliminatorias).</div>`;
+                return;
+            }
+
+            if (state.knockoutMatches.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 bg-white p-10 rounded-xl text-center border border-slate-200 space-y-3">
+                        <h4 class="font-sport text-2xl text-slate-800 uppercase">Las llaves aún no han sido generadas</h4>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">Puedes generar los cruces en cualquier momento haciendo clic en el botón superior para ver cómo quedarían las llaves con los puntos actuales.</p>
+                        <button onclick="generateKnockoutPhase(true)" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs uppercase px-5 py-2.5 rounded-lg shadow">Armar Llaves Ahora</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Verificar si hay campeón en la final
+            const finalMatch = state.knockoutMatches.find(m => m.stage === 'F');
+            if (finalMatch && finalMatch.played && finalMatch.winnerId) {
+                const champ = getTeam(finalMatch.winnerId);
+                if (champ) {
+                    banner.classList.remove('hidden');
+                    document.getElementById('champion-name').textContent = champ.name;
+                    document.getElementById('champion-players').textContent = `Plantel Campeón: ${champ.players.map(p => p.name).join(' • ')}`;
+                }
+            }
+
+            const stages = [
+                { code: 'QF', title: 'Cuartos de Final', matches: state.knockoutMatches.filter(m => m.stage === 'QF') },
+                { code: 'SF', title: 'Semifinales', matches: state.knockoutMatches.filter(m => m.stage === 'SF') },
+                { code: 'F', title: 'Gran Final', matches: state.knockoutMatches.filter(m => m.stage === 'F') }
+            ].filter(st => st.matches.length > 0);
+
+            container.className = `grid grid-cols-1 md:grid-cols-${stages.length} gap-6 items-center`;
+
+            container.innerHTML = stages.map(st => `
+                <div class="space-y-4">
+                    <div class="wc26-panel-header text-white px-4 py-2.5 rounded-xl font-sport text-2xl font-extrabold uppercase tracking-wider text-center shadow">
+                        ${st.title}
+                    </div>
+                    <div class="space-y-4">
+                        ${st.matches.map(m => renderKnockoutCard(m)).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderKnockoutCard(m) {
+            const home = getTeam(m.homeId);
+            const away = getTeam(m.awayId);
+            const ready = home && away;
+
+            return `
+                <div onclick="${ready ? `openMatchModal('${m.id}', true)` : ''}" class="${ready ? 'cursor-pointer hover:border-[#00b4d8]' : 'opacity-75'} bg-white rounded-2xl border-2 ${m.stage === 'F' ? 'border-[#d4af37] shadow-lg' : 'border-slate-200 shadow-sm'} p-4 transition space-y-3">
+                    <div class="flex justify-between items-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                        <span>${m.stageName}</span>
+                        <span class="${m.played ? 'text-slate-950 bg-[#00e676] px-2 py-0.5 rounded' : 'text-[#ff1e42]'}">${m.played ? 'Finalizado' : ready ? 'Cargar Resultado' : 'Esperando rivales'}</span>
+                    </div>
+
+                    <!-- Equipo 1 -->
+                    <div class="flex items-center justify-between p-2.5 rounded-xl ${m.winnerId && m.winnerId === m.homeId ? 'bg-[#00e676]/15 border border-[#00e676]' : 'bg-slate-50'}">
+                        <div class="flex items-center space-x-2.5">
+                            ${home ? `
+                                <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded w-10 text-center">${home.code}</span>
+                                <span class="font-sport text-xl font-extrabold text-slate-950">${home.name}</span>
+                            ` : `<span class="text-xs text-slate-400 italic">A definir...</span>`}
+                        </div>
+                        <span class="font-sport text-2xl font-black text-slate-950">${m.played ? m.homeScore : '-'}</span>
+                    </div>
+
+                    <!-- Equipo 2 -->
+                    <div class="flex items-center justify-between p-2.5 rounded-xl ${m.winnerId && m.winnerId === m.awayId ? 'bg-[#00e676]/15 border border-[#00e676]' : 'bg-slate-50'}">
+                        <div class="flex items-center space-x-2.5">
+                            ${away ? `
+                                <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded w-10 text-center">${away.code}</span>
+                                <span class="font-sport text-xl font-extrabold text-slate-950">${away.name}</span>
+                            ` : `<span class="text-xs text-slate-400 italic">A definir...</span>`}
+                        </div>
+                        <span class="font-sport text-2xl font-black text-slate-950">${m.played ? m.awayScore : '-'}</span>
+                    </div>
+
+                    ${m.played && m.homeScore === m.awayScore && m.winnerId ? `
+                        <div class="text-[11px] text-center font-extrabold uppercase tracking-wider text-slate-950 bg-[#d4af37]/30 py-1 rounded">
+                            Clasifica ${getTeam(m.winnerId)?.name} por desempate
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        /* ==========================================================================
+           REINICIAR TORNEO
+           ========================================================================== */
+        function resetTournamentModal() {
+            document.getElementById('reset-modal').classList.remove('hidden');
+        }
+        function closeResetModal() {
+            document.getElementById('reset-modal').classList.add('hidden');
+        }
+        function confirmResetTournament() {
+            state.status = 'SETUP';
+            state.matches = [];
+            state.knockoutMatches = [];
+            state.groups = [];
+            saveState();
+
+            closeResetModal();
+            document.getElementById('tournament-view').classList.add('hidden');
+            document.getElementById('setup-view').classList.remove('hidden');
+            document.getElementById('main-nav').classList.add('hidden');
+            document.getElementById('mobile-nav').classList.add('hidden');
+            document.getElementById('btn-demo').classList.remove('hidden');
+            document.getElementById('btn-reset').classList.add('hidden');
+            document.getElementById('header-status').textContent = 'Fase de Inscripción';
+
+            renderSetupTeams();
+            showToast("Torneo reiniciado. Puedes editar los equipos o el formato.");
+        }
+    </script>
+</body>
+</html>
