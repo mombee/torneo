@@ -710,6 +710,7 @@
         let isKnockoutModal = false;
         let modalTempGoals = {}; // playerId -> goals
         let modalExtraGoals = { home: 0, away: 0 };
+        let modalGoalEvents = []; // [{ id, side: 'home'|'away', playerId: string|null, minute: string }]
 
         // Variables del Cronómetro de Partido
         let timerInterval = null;
@@ -1207,15 +1208,8 @@
             const homePos = getTeamPosition(home.id);
             const awayPos = getTeamPosition(away.id);
 
-            let scorersSummary = [];
-            if (m.played && m.goals) {
-                Object.entries(m.goals).forEach(([pid, qty]) => {
-                    if (qty > 0) {
-                        const pInfo = getPlayer(pid);
-                        if (pInfo) scorersSummary.push(`${pInfo.name} (${qty})`);
-                    }
-                });
-            }
+            const homeScorers = formatTeamMatchScorersWithMinutes(m, 'home');
+            const awayScorers = formatTeamMatchScorersWithMinutes(m, 'away');
             const mvpInfo = m.mvpId ? getPlayer(m.mvpId) : null;
 
             return `
@@ -1227,15 +1221,22 @@
                         </span>
                     </div>
 
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-start justify-between">
                         <!-- Local -->
-                        <div class="flex items-center space-x-2 flex-1 min-w-0">
-                            <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm shrink-0">
+                        <div class="flex items-start space-x-2 flex-1 min-w-0">
+                            <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm shrink-0 mt-0.5">
                                 ${home.code}
                             </span>
-                            <div class="flex items-center space-x-1.5 min-w-0">
-                                <span class="font-sport text-xl font-extrabold text-slate-900 truncate">${home.name}</span>
-                                ${homePos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded shrink-0">${homePos}°</span>` : ''}
+                            <div class="min-w-0">
+                                <div class="flex items-center space-x-1.5 min-w-0">
+                                    <span class="font-sport text-xl font-extrabold text-slate-900 truncate leading-tight">${home.name}</span>
+                                    ${homePos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded shrink-0">${homePos}°</span>` : ''}
+                                </div>
+                                ${m.played && homeScorers.length > 0 ? `
+                                    <div class="text-[11px] text-slate-500 font-normal leading-snug mt-0.5 space-y-0.5">
+                                        ${homeScorers.map(s => `<div>⚽ ${s}</div>`).join('')}
+                                    </div>
+                                ` : ''}
                             </div>
                         </div>
 
@@ -1251,27 +1252,131 @@
                         </div>
 
                         <!-- Visitante -->
-                        <div class="flex items-center justify-end space-x-2 flex-1 text-right min-w-0">
-                            <div class="flex items-center justify-end space-x-1.5 min-w-0">
-                                ${awayPos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded shrink-0">${awayPos}°</span>` : ''}
-                                <span class="font-sport text-xl font-extrabold text-slate-900 truncate">${away.name}</span>
+                        <div class="flex items-start justify-end space-x-2 flex-1 text-right min-w-0">
+                            <div class="min-w-0">
+                                <div class="flex items-center justify-end space-x-1.5 min-w-0">
+                                    ${awayPos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded shrink-0">${awayPos}°</span>` : ''}
+                                    <span class="font-sport text-xl font-extrabold text-slate-900 truncate leading-tight">${away.name}</span>
+                                </div>
+                                ${m.played && awayScorers.length > 0 ? `
+                                    <div class="text-[11px] text-slate-500 font-normal leading-snug mt-0.5 space-y-0.5">
+                                        ${awayScorers.map(s => `<div>${s} ⚽</div>`).join('')}
+                                    </div>
+                                ` : ''}
                             </div>
-                            <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm shrink-0">
+                            <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm shrink-0 mt-0.5">
                                 ${away.code}
                             </span>
                         </div>
                     </div>
 
-                    ${m.played && (scorersSummary.length > 0 || mvpInfo) ? `
-                        <div class="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap justify-between items-center gap-2 text-[11px] text-slate-500">
-                            <div class="truncate">
-                                ${scorersSummary.length > 0 ? `<strong class="text-slate-800 uppercase">Goles:</strong> ${scorersSummary.join(', ')}` : 'Sin goles de jugadores registrados'}
-                            </div>
-                            ${mvpInfo ? `<span class="bg-[#090a0f] text-[#00b4d8] font-extrabold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">MVP: ${mvpInfo.name}</span>` : ''}
+                    ${m.played && mvpInfo ? `
+                        <div class="mt-2.5 pt-2 border-t border-slate-100 flex justify-end items-center text-[11px] text-slate-500">
+                            <span class="bg-[#090a0f] text-[#00b4d8] font-extrabold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider shrink-0">MVP: ${mvpInfo.name}</span>
                         </div>
                     ` : ''}
                 </div>
             `;
+        }
+
+        // Formatea los goleadores de un lado ('home' o 'away') incluyendo el minuto exacto de cada gol
+        function formatTeamMatchScorersWithMinutes(m, side) {
+            if (!m || !m.played) return [];
+            const teamObj = side === 'home' ? getTeam(m.homeId) : getTeam(m.awayId);
+            if (!teamObj) return [];
+            const teamPlayerIds = new Set(teamObj.players.map(p => p.id));
+
+            if (Array.isArray(m.goalEvents) && m.goalEvents.length > 0) {
+                const grouped = [];
+                const mapByKey = {};
+
+                m.goalEvents.forEach(ev => {
+                    const belongsToSide = ev.playerId ? teamPlayerIds.has(ev.playerId) : ev.side === side;
+                    if (!belongsToSide) return;
+
+                    if (ev.playerId) {
+                        const pInfo = getPlayer(ev.playerId);
+                        if (!pInfo) return;
+                        if (!mapByKey[ev.playerId]) {
+                            mapByKey[ev.playerId] = { label: pInfo.name, minutes: [] };
+                            grouped.push(mapByKey[ev.playerId]);
+                        }
+                        if (ev.minute && ev.minute !== '-') {
+                            mapByKey[ev.playerId].minutes.push(ev.minute);
+                        }
+                    } else {
+                        const extraKey = `extra_${side}`;
+                        if (!mapByKey[extraKey]) {
+                            mapByKey[extraKey] = { label: 'Gol extra', minutes: [] };
+                            grouped.push(mapByKey[extraKey]);
+                        }
+                        if (ev.minute && ev.minute !== '-') {
+                            mapByKey[extraKey].minutes.push(ev.minute);
+                        }
+                    }
+                });
+
+                return grouped.map(item =>
+                    item.minutes.length > 0 ? `${item.label} (${item.minutes.join(', ')})` : item.label
+                );
+            }
+
+            // Compatibilidad con partidos guardados sin registro de minuto
+            let fallback = [];
+            if (m.goals) {
+                teamObj.players.forEach(p => {
+                    const qty = m.goals[p.id] || 0;
+                    if (qty > 0) {
+                        fallback.push(qty > 1 ? `${p.name} (${qty})` : p.name);
+                    }
+                });
+            }
+            return fallback;
+        }
+
+        // Formatea los goleadores incluyendo el minuto exacto de cada gol
+        function formatMatchScorersWithMinutes(m) {
+            if (!m || !m.played) return [];
+
+            // Si el partido tiene eventos con minuto registrados
+            if (Array.isArray(m.goalEvents) && m.goalEvents.length > 0) {
+                const grouped = [];
+                const mapByKey = {};
+
+                m.goalEvents.forEach(ev => {
+                    if (ev.playerId) {
+                        const pInfo = getPlayer(ev.playerId);
+                        if (!pInfo) return;
+                        if (!mapByKey[ev.playerId]) {
+                            mapByKey[ev.playerId] = { label: pInfo.name, minutes: [] };
+                            grouped.push(mapByKey[ev.playerId]);
+                        }
+                        mapByKey[ev.playerId].minutes.push(ev.minute);
+                    } else {
+                        const teamObj = ev.side === 'home' ? getTeam(m.homeId) : getTeam(m.awayId);
+                        const extraKey = `extra_${ev.side}`;
+                        if (!mapByKey[extraKey]) {
+                            mapByKey[extraKey] = { label: `Gol extra (${teamObj ? teamObj.code : ev.side})`, minutes: [] };
+                            grouped.push(mapByKey[extraKey]);
+                        }
+                        mapByKey[extraKey].minutes.push(ev.minute);
+                    }
+                });
+
+                return grouped.map(item => `${item.label} (${item.minutes.join(', ')})`);
+            }
+
+            // Compatibilidad con partidos guardados anteriormente sin registro de minuto
+            let fallback = [];
+            if (m.goals) {
+                Object.entries(m.goals).forEach(([pid, qty]) => {
+                    if (qty > 0) {
+                        const pInfo = getPlayer(pid);
+                        if (pInfo) fallback.push(`${pInfo.name} (${qty})`);
+                    }
+                });
+            }
+            return fallback;
         }
 
         function renderMatches() {
@@ -1485,16 +1590,8 @@
                         ? m.stageName
                         : `${m.groupName}${m.round ? ` • Fecha ${m.round}` : ''}`;
 
-                    // Goleadores del partido
-                    let scorersText = [];
-                    if (m.goals) {
-                        Object.entries(m.goals).forEach(([pid, qty]) => {
-                            if (qty > 0) {
-                                const pl = getPlayer(pid);
-                                if (pl) scorersText.push(`${pl.name} (${qty})`);
-                            }
-                        });
-                    }
+                    // Goleadores del partido con minuto
+                    const scorersText = formatMatchScorersWithMinutes(m);
 
                     return `
                         <div onclick="openMatchFromHistory('${m.id}', ${m.isKnockout})" class="cursor-pointer bg-white rounded-xl p-3.5 border-2 ${cardBorder} hover:border-[#00b4d8] transition shadow-sm">
@@ -1520,7 +1617,7 @@
                                 </div>
                             </div>
                             ${scorersText.length > 0 ? `
-                                <div class="mt-2 pt-1.5 border-t border-slate-100 text-[11px] text-slate-500 truncate">
+                                <div class="mt-2 pt-1.5 border-t border-slate-100 text-[11px] text-slate-500 leading-relaxed">
                                     <strong class="text-slate-700 uppercase">Goles:</strong> ${scorersText.join(', ')}
                                 </div>
                             ` : ''}
@@ -1578,6 +1675,26 @@
         /* ==========================================================================
            MODAL DE PARTIDO (CARGA DE GOLES Y MVP)
            ========================================================================== */
+        function getCurrentMatchMinuteLabel() {
+            const baseTotalSeconds = timerBaseMinutes * 60;
+            const totalConfiguredSeconds = baseTotalSeconds + timerAddedSeconds;
+            const elapsedSeconds = Math.max(0, totalConfiguredSeconds - timerRemainingSeconds);
+
+            // Si estamos en tiempo agregado (ya pasaron los minutos reglamentarios)
+            if (elapsedSeconds > baseTotalSeconds) {
+                const extraElapsed = elapsedSeconds - baseTotalSeconds;
+                const extraMin = Math.max(1, Math.ceil(extraElapsed / 60));
+                return `${timerBaseMinutes}+${extraMin}'`;
+            }
+
+            // En tiempo reglamentario: si faltan 9 min de 10 (60s transcurridos) -> 1'
+            // Si recién empieza (0s transcurridos) -> 1'
+            const regMinute = elapsedSeconds === 0
+                ? 1
+                : Math.min(timerBaseMinutes, Math.ceil(elapsedSeconds / 60));
+            return `${regMinute}'`;
+        }
+
         function openMatchModal(matchId, isKnockout = false) {
             activeMatchId = matchId;
             isKnockoutModal = isKnockout;
@@ -1595,6 +1712,29 @@
 
             modalTempGoals = { ...(match.goals || {}) };
             modalExtraGoals = { ...(match.extraGoals || { home: 0, away: 0 }) };
+            modalGoalEvents = Array.isArray(match.goalEvents) ? match.goalEvents.map(e => ({ ...e })) : [];
+
+            // Si había goles cargados previamente sin eventos, reconstruir eventos básicos
+            if (modalGoalEvents.length === 0) {
+                home.players.forEach(p => {
+                    const qty = modalTempGoals[p.id] || 0;
+                    for (let i = 0; i < qty; i++) {
+                        modalGoalEvents.push({ id: uid(), side: 'home', playerId: p.id, minute: "-" });
+                    }
+                });
+                for (let i = 0; i < (modalExtraGoals.home || 0); i++) {
+                    modalGoalEvents.push({ id: uid(), side: 'home', playerId: null, minute: "-" });
+                }
+                away.players.forEach(p => {
+                    const qty = modalTempGoals[p.id] || 0;
+                    for (let i = 0; i < qty; i++) {
+                        modalGoalEvents.push({ id: uid(), side: 'away', playerId: p.id, minute: "-" });
+                    }
+                });
+                for (let i = 0; i < (modalExtraGoals.away || 0); i++) {
+                    modalGoalEvents.push({ id: uid(), side: 'away', playerId: null, minute: "-" });
+                }
+            }
 
             document.getElementById('modal-match-label').textContent = 
                 match.groupName ? `${match.groupName}${match.round ? ` • Fecha ${match.round}` : ''}` : match.stageName;
@@ -1635,6 +1775,31 @@
             recalculateModalScores();
             resetMatchTimer();
             document.getElementById('match-modal').classList.remove('hidden');
+        }
+
+        function updateModalPlayerMinutesDisplay() {
+            const matchList = isKnockoutModal ? state.knockoutMatches : state.matches;
+            const match = matchList.find(m => m.id === activeMatchId);
+            if (!match) return;
+
+            const home = getTeam(match.homeId);
+            const away = getTeam(match.awayId);
+            const allPlayers = [...(home ? home.players : []), ...(away ? away.players : [])];
+
+            allPlayers.forEach(p => {
+                const minsEl = document.getElementById(`goal-mins-${p.id}`);
+                if (!minsEl) return;
+                const mins = modalGoalEvents
+                    .filter(ev => ev.playerId === p.id && ev.minute && ev.minute !== '-')
+                    .map(ev => ev.minute);
+                if (mins.length > 0) {
+                    minsEl.textContent = mins.join(', ');
+                    minsEl.classList.remove('hidden');
+                } else {
+                    minsEl.textContent = '';
+                    minsEl.classList.add('hidden');
+                }
+            });
         }
 
         /* ==========================================================================
@@ -1761,10 +1926,16 @@
             const container = document.getElementById(containerId);
             container.innerHTML = team.players.map(p => {
                 const count = modalTempGoals[p.id] || 0;
+                const mins = modalGoalEvents
+                    .filter(ev => ev.playerId === p.id && ev.minute && ev.minute !== '-')
+                    .map(ev => ev.minute);
                 return `
                     <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
-                        <span class="text-xs font-bold text-slate-800 truncate pr-2">${p.name}</span>
-                        <div class="flex items-center space-x-2">
+                        <div class="min-w-0 pr-2">
+                            <div class="text-xs font-bold text-slate-800 truncate">${p.name}</div>
+                            <div id="goal-mins-${p.id}" class="${mins.length > 0 ? '' : 'hidden'} text-[10px] text-slate-400 font-normal leading-tight mt-0.5">${mins.join(', ')}</div>
+                        </div>
+                        <div class="flex items-center space-x-2 shrink-0">
                             <button type="button" onclick="changePlayerGoal('${p.id}', -1)" class="w-7 h-7 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm flex items-center justify-center transition">-</button>
                             <span id="goal-count-${p.id}" class="w-6 text-center font-sport text-xl font-bold text-emerald-700">${count}</span>
                             <button type="button" onclick="changePlayerGoal('${p.id}', 1)" class="w-7 h-7 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center justify-center transition">+</button>
@@ -1777,14 +1948,60 @@
         function changePlayerGoal(playerId, delta) {
             const current = modalTempGoals[playerId] || 0;
             const next = Math.max(0, current + delta);
+            if (next === current) return;
+
             modalTempGoals[playerId] = next;
+
+            if (delta > 0) {
+                const matchList = isKnockoutModal ? state.knockoutMatches : state.matches;
+                const match = matchList.find(m => m.id === activeMatchId);
+                const home = match ? getTeam(match.homeId) : null;
+                const side = home && home.players.some(p => p.id === playerId) ? 'home' : 'away';
+                const minuteLabel = getCurrentMatchMinuteLabel();
+                modalGoalEvents.push({
+                    id: uid(),
+                    side,
+                    playerId,
+                    minute: minuteLabel
+                });
+            } else if (delta < 0) {
+                // Eliminar el último gol registrado de este jugador
+                for (let i = modalGoalEvents.length - 1; i >= 0; i--) {
+                    if (modalGoalEvents[i].playerId === playerId) {
+                        modalGoalEvents.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+
             const el = document.getElementById(`goal-count-${playerId}`);
             if (el) el.textContent = next;
             recalculateModalScores();
         }
 
         function adjustExtraGoals(side, delta) {
-            modalExtraGoals[side] = Math.max(0, (modalExtraGoals[side] || 0) + delta);
+            const current = modalExtraGoals[side] || 0;
+            const next = Math.max(0, current + delta);
+            if (next === current) return;
+
+            modalExtraGoals[side] = next;
+
+            if (delta > 0) {
+                modalGoalEvents.push({
+                    id: uid(),
+                    side,
+                    playerId: null,
+                    minute: getCurrentMatchMinuteLabel()
+                });
+            } else if (delta < 0) {
+                for (let i = modalGoalEvents.length - 1; i >= 0; i--) {
+                    if (modalGoalEvents[i].playerId === null && modalGoalEvents[i].side === side) {
+                        modalGoalEvents.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+
             recalculateModalScores();
         }
 
@@ -1808,6 +2025,8 @@
             document.getElementById('modal-home-score').textContent = homeSum;
             document.getElementById('modal-away-score').textContent = awaySum;
 
+            updateModalPlayerMinutesDisplay();
+
             const tieBox = document.getElementById('modal-tiebreaker-box');
             if (isKnockoutModal && homeSum === awaySum) {
                 tieBox.classList.remove('hidden');
@@ -1829,6 +2048,7 @@
             match.awayScore = awayScore;
             match.goals = { ...modalTempGoals };
             match.extraGoals = { ...modalExtraGoals };
+            match.goalEvents = modalGoalEvents.map(e => ({ ...e }));
             match.mvpId = document.getElementById('modal-mvp-select').value;
 
             if (isKnockoutModal) {
@@ -1858,6 +2078,7 @@
             match.awayScore = 0;
             match.goals = {};
             match.extraGoals = { home: 0, away: 0 };
+            match.goalEvents = [];
             match.mvpId = '';
             match.winnerId = null;
 
