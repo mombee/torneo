@@ -460,6 +460,68 @@
         body.dark-mode #match-modal > div,
         body.dark-mode #team-history-modal > div,
         body.dark-mode #reset-modal > div { border-color: #f8fafc !important; }
+    
+        /* ---------- Extras: chips de estadísticas, botón secundario, forma, confeti ---------- */
+        .stat-chip {
+            background: #fff;
+            border: 2.5px solid var(--wc-black);
+            border-radius: 1rem;
+            box-shadow: 3px 3px 0 var(--chip, var(--wc-black));
+            padding: .65rem .9rem;
+            position: relative;
+            overflow: hidden;
+            min-width: 0;
+        }
+        .stat-chip::before {
+            content: '';
+            position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+            background: var(--chip, var(--wc-black));
+        }
+        .stat-chip-label {
+            font-size: 10px; font-weight: 800; letter-spacing: .12em;
+            text-transform: uppercase; color: #64748b; padding-left: .4rem;
+        }
+        .stat-chip-value {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900; font-style: italic; text-transform: uppercase;
+            font-size: 1.7rem; line-height: 1.1; padding-left: .4rem;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .stat-chip-sub {
+            font-size: 11px; font-weight: 600; color: #64748b; padding-left: .4rem;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .btn-ghost {
+            background: #fff; color: var(--wc-black);
+            border: 2.5px solid var(--wc-black);
+            box-shadow: 3px 3px 0 var(--wc-black);
+            border-radius: .9rem;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800; font-style: italic; text-transform: uppercase;
+            letter-spacing: .04em; padding: .4rem 1rem; font-size: 1.05rem;
+            transition: transform .12s ease, box-shadow .12s ease;
+        }
+        .btn-ghost:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--wc-green); }
+        .form-dot {
+            display: inline-block; width: .65rem; height: .65rem; border-radius: 999px;
+            margin: 0 1.5px; border: 1.5px solid var(--wc-black);
+        }
+        .confetti-wrap { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 70; }
+        .confetti-piece {
+            position: absolute; top: -20px; width: 10px; height: 16px;
+            animation: confetti-fall linear forwards;
+        }
+        @keyframes confetti-fall {
+            to { transform: translateY(110vh) rotate(720deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .confetti-wrap { display: none; }
+        }
+        body.dark-mode .stat-chip { background: #111420; border-color: #f8fafc; }
+        body.dark-mode .stat-chip-label,
+        body.dark-mode .stat-chip-sub { color: #94a3b8; }
+        body.dark-mode .btn-ghost { background: #111420; color: #f8fafc; border-color: #f8fafc; box-shadow: 3px 3px 0 #f8fafc; }
+        body.dark-mode .form-dot { border-color: #f8fafc; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -506,6 +568,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                     </svg>
                 </button>
+                <!-- Respaldo: exportar / importar -->
+                <button onclick="exportBackup()" title="Descargar respaldo del torneo (.json)" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4"></path></svg>
+                </button>
+                <button onclick="document.getElementById('import-file').click()" title="Cargar un respaldo (.json)" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 16V4m0 0L8 8m4-4l4 4"></path></svg>
+                </button>
+                <input type="file" id="import-file" accept="application/json,.json" class="hidden" onchange="importBackup(event)">
                 <button onclick="loadDemoData()" id="btn-demo" class="text-xs bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-lg border border-white/20 font-bold uppercase tracking-wider transition">
                     Cargar 10 Equipos Demo
                 </button>
@@ -731,6 +801,9 @@
                     </div>
                 </div>
 
+                <!-- Resumen rápido del torneo -->
+                <div id="summary-strip" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+
                 <!-- Contenedor de Partidos (Agrupados por Zona o Liga) -->
                 <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- JS Inyecta los partidos aquí -->
@@ -753,6 +826,10 @@
                     </div>
                 </div>
 
+                <div class="flex justify-end">
+                    <button onclick="copyStandings()" class="btn-ghost">Copiar tabla para WhatsApp</button>
+                </div>
+
                 <div id="standings-container" class="space-y-8">
                     <!-- JS Inyecta la(s) tabla(s) aquí -->
                 </div>
@@ -760,6 +837,8 @@
 
             <!-- TAB 3: GOLEADORES Y FIGURAS -->
             <div id="tab-stats" class="tab-content hidden space-y-6">
+                <!-- Récords del torneo -->
+                <div id="records-container" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
                     <!-- Tabla Goleadores -->
@@ -980,7 +1059,7 @@
                 <!-- Marcador Global (Calculado por los goles de jugadores) -->
                 <div class="bg-slate-100 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
                     <div class="text-center flex-1">
-                        <span id="modal-home-badge" class="inline-block text-xs font-extrabold px-2 py-0.5 rounded mb-1">ARG</span>
+                        <div id="modal-home-badge" class="flex justify-center mb-2"></div>
                         <div id="modal-home-name" class="font-sport text-2xl font-bold text-slate-900 leading-none">Argentina</div>
                     </div>
                     <div class="px-6 flex items-center space-x-3">
@@ -989,7 +1068,7 @@
                         <span id="modal-away-score" class="font-sport text-5xl font-bold text-slate-900 bg-white px-4 py-1 rounded-lg border border-slate-300 shadow-inner">0</span>
                     </div>
                     <div class="text-center flex-1">
-                        <span id="modal-away-badge" class="inline-block text-xs font-extrabold px-2 py-0.5 rounded mb-1">BRA</span>
+                        <div id="modal-away-badge" class="flex justify-center mb-2"></div>
                         <div id="modal-away-name" class="font-sport text-2xl font-bold text-slate-900 leading-none">Brasil</div>
                     </div>
                 </div>
@@ -1117,6 +1196,180 @@
         /* ==========================================================================
            INICIALIZACIÓN Y UTILIDADES
            ========================================================================== */
+        /* ==========================================================================
+           EXTRAS: resumen, récords, forma, confeti, respaldo, copiar tabla
+           ========================================================================== */
+        let nextMatchId = null;
+
+        // Primer partido sin jugar (ordenado por fecha) de la fase regular
+        function computeNextMatchId() {
+            const pending = state.matches
+                .map((m, idx) => ({ m, idx }))
+                .filter(x => !x.m.played)
+                .sort((a, b) => ((a.m.round || 1) - (b.m.round || 1)) || (a.idx - b.idx));
+            return pending.length > 0 ? pending[0].m.id : null;
+        }
+
+        // Últimos 5 resultados como puntitos de color
+        function formDots(form) {
+            if (!form || form.length === 0) return '<span class="text-slate-400 text-xs">—</span>';
+            const colors = { V: '#00d66b', E: '#cbd5e1', D: '#ff2d4b' };
+            const titles = { V: 'Victoria', E: 'Empate', D: 'Derrota' };
+            return form.slice(-5).map(r =>
+                `<span class="form-dot" style="background:${colors[r]}" title="${titles[r]}"></span>`
+            ).join('');
+        }
+
+        function statChip(label, value, sub, color) {
+            return `
+                <div class="stat-chip" style="--chip:${color}">
+                    <div class="stat-chip-label">${label}</div>
+                    <div class="stat-chip-value">${value}</div>
+                    <div class="stat-chip-sub">${sub || '&nbsp;'}</div>
+                </div>
+            `;
+        }
+
+        function renderSummaryStrip() {
+            const el = document.getElementById('summary-strip');
+            if (!el) return;
+
+            const played = [...state.matches, ...state.knockoutMatches].filter(m => m.played);
+            const goals = played.reduce((s, m) => s + m.homeScore + m.awayScore, 0);
+            const avg = played.length ? (goals / played.length).toFixed(1) : '0.0';
+            const remaining = state.matches.filter(m => !m.played).length;
+
+            const goalsMap = {};
+            played.forEach(m => {
+                Object.entries(m.goals || {}).forEach(([pid, qty]) => {
+                    goalsMap[pid] = (goalsMap[pid] || 0) + qty;
+                });
+            });
+            let top = null;
+            Object.entries(goalsMap).forEach(([pid, qty]) => {
+                if (!top || qty > top.qty) top = { pid, qty };
+            });
+            const topPlayer = top && top.qty > 0 ? getPlayer(top.pid) : null;
+
+            el.innerHTML =
+                statChip('Goles totales', goals, `${played.length} partidos jugados`, '#ffd60a') +
+                statChip('Promedio por partido', avg, 'goles por encuentro', '#ff4fa3') +
+                statChip('Fase regular', remaining, remaining === 1 ? 'partido por jugar' : 'partidos por jugar', '#00c2e0') +
+                statChip('Goleador', topPlayer ? topPlayer.name : '—', topPlayer ? `${top.qty} goles • ${topPlayer.team.code}` : 'sin goles aún', '#00d66b');
+        }
+
+        function renderRecords() {
+            const el = document.getElementById('records-container');
+            if (!el) return;
+
+            const rows = state.groups.flatMap(g => calculateGroupStandings(g)).filter(r => r.pj > 0);
+            const played = [...state.matches, ...state.knockoutMatches].filter(m => m.played);
+
+            let attack = null, defense = null;
+            rows.forEach(r => {
+                if (!attack || r.gf > attack.gf) attack = r;
+                if (!defense || (r.gc / r.pj) < (defense.gc / defense.pj)) defense = r;
+            });
+
+            let bigWin = null, mostGoals = null;
+            played.forEach(m => {
+                const diff = Math.abs(m.homeScore - m.awayScore);
+                const total = m.homeScore + m.awayScore;
+                if (!bigWin || diff > bigWin.diff) bigWin = { m, diff };
+                if (!mostGoals || total > mostGoals.total) mostGoals = { m, total };
+            });
+
+            const matchLabel = (m) => {
+                const h = getTeam(m.homeId), a = getTeam(m.awayId);
+                return h && a ? `${h.code} ${m.homeScore}-${m.awayScore} ${a.code}` : '—';
+            };
+
+            el.innerHTML =
+                statChip('Mejor ataque', attack ? attack.team.name : '—', attack ? `${attack.gf} goles a favor` : 'sin datos', '#ff2d4b') +
+                statChip('Mejor defensa', defense ? defense.team.name : '—', defense ? `${defense.gc} en contra en ${defense.pj} PJ` : 'sin datos', '#0a84ff') +
+                statChip('Mayor goleada', bigWin && bigWin.diff > 0 ? matchLabel(bigWin.m) : '—', bigWin && bigWin.diff > 0 ? `diferencia de ${bigWin.diff}` : 'sin datos', '#ff8a00') +
+                statChip('Más goles en un partido', mostGoals && mostGoals.total > 0 ? matchLabel(mostGoals.m) : '—', mostGoals && mostGoals.total > 0 ? `${mostGoals.total} goles` : 'sin datos', '#7c3aed');
+        }
+
+        function launchConfetti() {
+            const colors = ['#ff2d4b', '#ff8a00', '#ffd60a', '#00d66b', '#00c2e0', '#0a84ff', '#7c3aed', '#ff4fa3'];
+            const wrap = document.createElement('div');
+            wrap.className = 'confetti-wrap';
+            for (let i = 0; i < 90; i++) {
+                const p = document.createElement('span');
+                p.className = 'confetti-piece';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.background = colors[i % colors.length];
+                p.style.animationDuration = (2.8 + Math.random() * 2.4) + 's';
+                p.style.animationDelay = (Math.random() * 0.8) + 's';
+                p.style.transform = `rotate(${Math.random() * 360}deg)`;
+                if (i % 3 === 0) p.style.borderRadius = '50%';
+                wrap.appendChild(p);
+            }
+            document.body.appendChild(wrap);
+            setTimeout(() => wrap.remove(), 6500);
+        }
+
+        function exportBackup() {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `torneo3v3-respaldo-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(a.href);
+            showToast("Respaldo descargado.");
+        }
+
+        function importBackup(ev) {
+            const file = ev.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const data = JSON.parse(reader.result);
+                    if (!data || !Array.isArray(data.teams) || !Array.isArray(data.matches) ||
+                        !Array.isArray(data.groups) || !Array.isArray(data.knockoutMatches)) {
+                        throw new Error('formato inválido');
+                    }
+                    localStorage.setItem('torneo3v3_state', JSON.stringify(data));
+                    location.reload();
+                } catch (e) {
+                    showToast("El archivo no es un respaldo válido.");
+                }
+            };
+            reader.readAsText(file);
+            ev.target.value = '';
+        }
+
+        function copyStandings() {
+            const lines = ['🏆 Posiciones - Torneo 3v3 Mundial 26'];
+            state.groups.forEach(g => {
+                lines.push('', `*${g.name}*`);
+                calculateGroupStandings(g).forEach((r, i) => {
+                    const dg = r.dg > 0 ? '+' + r.dg : r.dg;
+                    lines.push(`${i + 1}. ${r.team.name} - ${r.pts} pts (PJ ${r.pj}, DG ${dg})`);
+                });
+            });
+            const text = lines.join('\n');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showToast("Tabla copiada. Pegala en WhatsApp."))
+                    .catch(() => showToast("No se pudo copiar la tabla."));
+            } else {
+                showToast("Tu navegador no permite copiar automáticamente.");
+            }
+        }
+
+        // Esc cierra el modal que esté abierto
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            if (!document.getElementById('match-modal').classList.contains('hidden')) closeMatchModal();
+            else if (!document.getElementById('team-history-modal').classList.contains('hidden')) closeTeamHistoryModal();
+            else if (!document.getElementById('reset-modal').classList.contains('hidden')) closeResetModal();
+        });
+
         function applyTheme(isDark) {
             const moon = document.getElementById('icon-moon');
             const sun = document.getElementById('icon-sun');
@@ -1254,6 +1507,41 @@
                 `Con ${g} grupos pasando ${q} de cada uno, clasifican ${totalAdvancing} equipos a ${phaseName}.`;
         }
 
+        // Escudos actuales de las selecciones nacionales (SVG transparente).
+        // Fuente de los archivos: FootyLogos, que publica los escudos en alta resolución.
+        const FEDERATION_LOGOS = {
+            ARG: 'https://assets.footylogos.com/logos/argentina-national-team/argentina-national-team-logo-footylogos.svg',
+            BRA: 'https://assets.footylogos.com/logos/brazil-national-team/brazil-national-team-logo-footylogos.svg',
+            URU: 'https://assets.footylogos.com/logos/uruguay-national-team/uruguay-national-team-logo-footylogos.svg',
+            FRA: 'https://assets.footylogos.com/logos/france-national-team/france-national-team-logo-footylogos.svg',
+            ESP: 'https://assets.footylogos.com/logos/spain-national-team/spain-national-team-logo-footylogos.svg',
+            GER: 'https://assets.footylogos.com/logos/germany-national-team/germany-national-team-logo-footylogos.svg',
+            ITA: 'https://assets.footylogos.com/logos/italy-national-team/italy-national-team-logo-footylogos.svg',
+            ENG: 'https://assets.footylogos.com/logos/england-national-team/england-national-team-logo-footylogos.svg',
+            POR: 'https://assets.footylogos.com/logos/portugal-national-team/portugal-national-team-logo-footylogos.svg',
+            NED: 'https://assets.footylogos.com/logos/netherlands-national-team-dutch/netherlands-national-team-dutch-logo-footylogos.svg',
+            COL: 'https://assets.footylogos.com/logos/colombia-national-team/colombia-national-team-logo-footylogos.svg',
+            CRO: 'https://assets.footylogos.com/logos/croatia-national-team/croatia-national-team-logo-footylogos.svg',
+            MAR: 'https://assets.footylogos.com/logos/morocco-national-team/morocco-national-team-logo-footylogos.svg',
+            JPN: 'https://assets.footylogos.com/logos/japan-national-team/japan-national-team-logo-footylogos.svg',
+            MEX: 'https://assets.footylogos.com/logos/mexico-national-team/mexico-national-team-logo-footylogos.svg',
+            USA: 'https://assets.footylogos.com/logos/usa-national-team/usa-national-team-logo-footylogos.svg',
+            CAN: 'https://assets.footylogos.com/logos/canada-national-team/canada-national-team-logo-footylogos.svg',
+            CHL: 'https://assets.footylogos.com/logos/chile-national-team/chile-national-team-logo-footylogos.svg',
+            AYB: 'https://assets.footylogos.com/logos/antigua-and-barbuda-national-team/antigua-and-barbuda-national-team-logo-footylogos.svg'
+        };
+
+        function teamLogoMarkup(team, sizeClass = 'w-11 h-11') {
+            const src = FEDERATION_LOGOS[team.code];
+            const code = String(team.code || 'FIFA').replace(/[^A-Z0-9]/gi, '').slice(0, 3);
+            const fallback = `<span style="background-color:${team.colorBg || '#334155'};color:${team.colorText || '#fff'}" class="${sizeClass} inline-flex items-center justify-center rounded-xl border border-black/10 font-sport text-xs font-black shrink-0">${code}</span>`;
+            if (!src) return fallback;
+
+            return `<span title="Escudo de ${team.name}" style="background-color:#fff" class="${sizeClass} inline-flex items-center justify-center rounded-xl border border-slate-200 p-1.5 shrink-0 shadow-sm overflow-hidden">
+                <img src="${src}" alt="Escudo de la selección de ${team.name}" class="w-full h-full object-contain" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=&quot;background:${team.colorBg || '#334155'};color:${team.colorText || '#fff'}&quot; class=&quot;w-full h-full flex items-center justify-center font-black text-xs&quot;>${code}</span>'">
+            </span>`;
+        }
+
         function addTeam(e) {
             e.preventDefault();
             const sel = document.getElementById('country-select').value;
@@ -1339,9 +1627,7 @@
                 <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/70 hover:bg-white hover:shadow-md transition flex flex-col justify-between">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-3">
                         <div class="flex items-center space-x-2.5">
-                            <span style="background-color:${t.colorBg}; color:${t.colorText}" class="font-sport text-lg font-bold px-2.5 py-0.5 rounded shadow-sm border border-black/10">
-                                ${t.code}
-                            </span>
+                            ${teamLogoMarkup(t, 'w-12 h-12')}
                             <div>
                                 <h4 class="font-bold text-slate-900 text-sm leading-tight">${t.name}</h4>
                                 <span class="text-[11px] text-slate-400 font-semibold">Equipo #${idx + 1}</span>
@@ -1540,6 +1826,8 @@
         function renderAllTournamentViews() {
             renderMatches();
             renderStandings();
+            renderSummaryStrip();
+            renderRecords();
             renderStats();
             renderKnockout();
             if (activeHistoryTeamId) {
@@ -1638,16 +1926,14 @@
                     <div class="flex justify-between items-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">
                         <span>${m.round ? `Fecha ${m.round} • ` : ''}${idxLabel}</span>
                         <span class="${m.played ? 'text-slate-950 bg-[#00e676] px-2 py-0.5 rounded' : 'text-[#ff1e42] bg-[#ff1e42]/10 px-2 py-0.5 rounded'}">
-                            ${m.played ? 'Finalizado' : 'Por Jugar'}
+                            ${m.played ? 'Finalizado' : (m.id === nextMatchId ? '● Próximo' : 'Por Jugar')}
                         </span>
                     </div>
 
                     <div class="flex items-start justify-between">
                         <!-- Local -->
                         <div class="flex items-start space-x-2 flex-1 min-w-0">
-                            <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm shrink-0 mt-0.5">
-                                ${home.code}
-                            </span>
+                            ${teamLogoMarkup(home, 'w-11 h-11')}
                             <div class="min-w-0">
                                 <div class="flex items-center space-x-1.5 min-w-0">
                                     <span class="font-sport text-xl font-extrabold text-slate-900 truncate leading-tight">${home.name}</span>
@@ -1685,9 +1971,7 @@
                                     </div>
                                 ` : ''}
                             </div>
-                            <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm shrink-0 mt-0.5">
-                                ${away.code}
-                            </span>
+                            ${teamLogoMarkup(away, 'w-11 h-11')}
                         </div>
                     </div>
 
@@ -1801,6 +2085,7 @@
         }
 
         function renderMatches() {
+            nextMatchId = computeNextMatchId();
             renderRoundsFilterBar();
 
             const container = document.getElementById('matches-container');
@@ -2022,7 +2307,7 @@
                             </div>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
-                                    <span style="background-color:${team.colorBg}; color:${team.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded">${team.code}</span>
+                                    ${teamLogoMarkup(team, 'w-9 h-9')}
                                     <span class="font-sport text-lg font-extrabold text-slate-900">${team.name}</span>
                                     ${getTeamPosition(team.id) ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${getTeamPosition(team.id)}°</span>` : ''}
                                 </div>
@@ -2034,7 +2319,7 @@
                                 <div class="flex items-center space-x-2 text-right">
                                     ${rival && getTeamPosition(rival.id) ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${getTeamPosition(rival.id)}°</span>` : ''}
                                     <span class="font-sport text-lg font-extrabold text-slate-900">${rival ? rival.name : 'TBD'}</span>
-                                    ${rival ? `<span style="background-color:${rival.colorBg}; color:${rival.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded">${rival.code}</span>` : ''}
+                                    ${rival ? `${teamLogoMarkup(rival, 'w-9 h-9')}` : ''}
                                 </div>
                             </div>
                             ${scorersText.length > 0 ? `
@@ -2074,7 +2359,7 @@
                             </div>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
-                                    <span style="background-color:${team.colorBg}; color:${team.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded">${team.code}</span>
+                                    ${teamLogoMarkup(team, 'w-9 h-9')}
                                     <span class="font-sport text-lg font-extrabold text-slate-900">${team.name}</span>
                                     ${getTeamPosition(team.id) ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${getTeamPosition(team.id)}°</span>` : ''}
                                 </div>
@@ -2083,7 +2368,7 @@
                                     ${rival ? `
                                         ${getTeamPosition(rival.id) ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${getTeamPosition(rival.id)}°</span>` : ''}
                                         <span class="font-sport text-lg font-extrabold text-slate-900">${rival.name}</span>
-                                        <span style="background-color:${rival.colorBg}; color:${rival.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded">${rival.code}</span>
+                                        ${teamLogoMarkup(rival, 'w-9 h-9')}
                                     ` : `<span class="text-xs text-slate-400 italic">Rival a definir</span>`}
                                 </div>
                             </div>
@@ -2161,17 +2446,13 @@
                 match.groupName ? `${match.groupName}${match.round ? ` • Fecha ${match.round}` : ''}` : match.stageName;
             
             const homeBadge = document.getElementById('modal-home-badge');
-            homeBadge.textContent = home.code;
-            homeBadge.style.backgroundColor = home.colorBg;
-            homeBadge.style.color = home.colorText;
+            homeBadge.innerHTML = teamLogoMarkup(home, 'w-16 h-16');
             const homePos = getTeamPosition(home.id);
             document.getElementById('modal-home-name').textContent = homePos ? `${home.name} (${homePos}°)` : home.name;
             document.getElementById('modal-home-list-title').textContent = `Jugadores ${home.name}`;
 
             const awayBadge = document.getElementById('modal-away-badge');
-            awayBadge.textContent = away.code;
-            awayBadge.style.backgroundColor = away.colorBg;
-            awayBadge.style.color = away.colorText;
+            awayBadge.innerHTML = teamLogoMarkup(away, 'w-16 h-16');
             const awayPos = getTeamPosition(away.id);
             document.getElementById('modal-away-name').textContent = awayPos ? `${away.name} (${awayPos}°)` : away.name;
             document.getElementById('modal-away-list-title').textContent = `Jugadores ${away.name}`;
@@ -2487,6 +2768,9 @@
             closeMatchModal();
             renderAllTournamentViews();
             showToast("Resultado y estadísticas actualizadas.");
+            if (isKnockoutModal && match.stage === 'F' && match.winnerId) {
+                launchConfetti();
+            }
         }
 
         function clearMatchResult() {
@@ -2532,7 +2816,20 @@
                 }
             });
 
-            const groupMatches = state.matches.filter(m => m.groupName === group.name && m.played);
+            const groupMatches = state.matches
+                .filter(m => m.groupName === group.name && m.played)
+                .sort((a, b) => (a.round || 1) - (b.round || 1));
+
+            // Forma reciente (V / E / D) por equipo, en orden de fecha
+            groupMatches.forEach(m => {
+                const hs = stats[m.homeId];
+                const as = stats[m.awayId];
+                if (!hs || !as) return;
+                hs.form = hs.form || [];
+                as.form = as.form || [];
+                hs.form.push(m.homeScore > m.awayScore ? 'V' : m.homeScore < m.awayScore ? 'D' : 'E');
+                as.form.push(m.awayScore > m.homeScore ? 'V' : m.awayScore < m.homeScore ? 'D' : 'E');
+            });
             groupMatches.forEach(m => {
                 const h = stats[m.homeId];
                 const a = stats[m.awayId];
@@ -2595,6 +2892,7 @@
                                         <th class="py-3 px-3 font-extrabold text-center">GF</th>
                                         <th class="py-3 px-3 font-extrabold text-center">GC</th>
                                         <th class="py-3 px-3 font-extrabold text-center">DG</th>
+                                        <th class="py-3 px-3 font-extrabold text-center">Forma</th>
                                         <th class="py-3 px-4 font-black text-center bg-slate-950 text-[#00e676]">PTS</th>
                                         <th class="py-3 px-4 font-extrabold text-right">Estado</th>
                                     </tr>
@@ -2613,9 +2911,7 @@
                                                 <td class="py-3.5 px-4">
                                                     <div class="flex items-center justify-between">
                                                         <div class="flex items-center space-x-3">
-                                                            <span style="background-color:${r.team.colorBg}; color:${r.team.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm">
-                                                                ${r.team.code}
-                                                            </span>
+                                                            ${teamLogoMarkup(r.team, 'w-11 h-11')}
                                                             <div>
                                                                 <div class="font-sport text-xl font-extrabold text-slate-950 group-hover:text-[#00b4d8] transition leading-none flex items-center space-x-2">
                                                                     <span>${r.team.name}</span>
@@ -2635,6 +2931,7 @@
                                                 <td class="py-3.5 px-3 text-center font-bold ${r.dg > 0 ? 'text-emerald-700' : r.dg < 0 ? 'text-[#ff1e42]' : 'text-slate-500'}">
                                                     ${r.dg > 0 ? '+' + r.dg : r.dg}
                                                 </td>
+                                                <td class="py-3.5 px-3 text-center whitespace-nowrap">${formDots(r.form)}</td>
                                                 <td class="py-3.5 px-4 text-center font-sport text-2xl font-black bg-slate-950 text-white">${r.pts}</td>
                                                 <td class="py-3.5 px-4 text-right">
                                                     ${isQualifying ? `
@@ -2960,7 +3257,7 @@
                     <div class="flex items-center justify-between p-2.5 rounded-xl ${m.winnerId && m.winnerId === m.homeId ? 'bg-[#00e676]/15 border border-[#00e676]' : 'bg-slate-50'}">
                         <div class="flex items-center space-x-2">
                             ${home ? `
-                                <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded w-10 text-center">${home.code}</span>
+                                ${teamLogoMarkup(home, 'w-11 h-11')}
                                 <span class="font-sport text-xl font-extrabold text-slate-950">${home.name}</span>
                                 ${homePos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${homePos}°</span>` : ''}
                             ` : `<span class="text-xs text-slate-400 italic">A definir...</span>`}
@@ -2972,7 +3269,7 @@
                     <div class="flex items-center justify-between p-2.5 rounded-xl ${m.winnerId && m.winnerId === m.awayId ? 'bg-[#00e676]/15 border border-[#00e676]' : 'bg-slate-50'}">
                         <div class="flex items-center space-x-2">
                             ${away ? `
-                                <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded w-10 text-center">${away.code}</span>
+                                ${teamLogoMarkup(away, 'w-11 h-11')}
                                 <span class="font-sport text-xl font-extrabold text-slate-950">${away.name}</span>
                                 ${awayPos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${awayPos}°</span>` : ''}
                             ` : `<span class="text-xs text-slate-400 italic">A definir...</span>`}
