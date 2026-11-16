@@ -93,7 +93,7 @@
                 </div>
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span class="text-[10px] font-extrabold uppercase tracking-[0.25em] px-2 py-0.5 rounded bg-white/10 text-[#00e676] border border-white/10">COPA</span>
+                        <span class="text-[10px] font-extrabold uppercase tracking-[0.25em] px-2 py-0.5 rounded bg-white/10 text-[#00e676] border border-white/10">We Are 26</span>
                         <span class="text-xs text-slate-300 font-semibold tracking-wider uppercase" id="header-status">Fase de Inscripción</span>
                     </div>
                     <h1 class="font-sport text-3xl sm:text-4xl font-black tracking-wide uppercase leading-none text-white mt-0.5">
@@ -112,7 +112,7 @@
 
             <div class="flex items-center space-x-2">
                 <button onclick="loadDemoData()" id="btn-demo" class="text-xs bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-lg border border-white/20 font-bold uppercase tracking-wider transition">
-                    Cargar 8 Equipos Demo
+                    Cargar 10 Equipos Demo
                 </button>
                 <button onclick="resetTournamentModal()" id="btn-reset" class="hidden text-xs bg-[#ff1e42] hover:bg-[#e01537] text-white px-3.5 py-2 rounded-lg font-bold uppercase tracking-wider transition shadow-md">
                     Reiniciar
@@ -293,7 +293,7 @@
                         <div id="empty-teams-state" class="text-center py-16 border-2 border-dashed border-slate-200 rounded-2xl">
                             <div class="w-16 h-16 bg-slate-950 text-[#00e676] rounded-2xl flex items-center justify-center mx-auto mb-3 font-sport text-3xl font-black shadow">26</div>
                             <h3 class="text-slate-800 font-extrabold text-base uppercase font-sport tracking-wide text-xl">No hay selecciones registradas</h3>
-                            <p class="text-slate-500 text-xs mt-1 max-w-sm mx-auto">Utiliza el panel izquierdo para agregar países y sus 3 jugadores, o usa el botón superior "Cargar 8 Equipos Demo" para probar rápido.</p>
+                            <p class="text-slate-500 text-xs mt-1 max-w-sm mx-auto">Utiliza el panel izquierdo para agregar países y sus 3 jugadores, o usa el botón superior "Cargar 10 Equipos Demo" para probar rápido.</p>
                         </div>
 
                         <div id="teams-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -315,13 +315,24 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl shadow-md border border-slate-200/90">
                     <div>
                         <h2 class="font-sport text-3xl font-black text-slate-950 uppercase leading-none">Calendario Oficial de Partidos</h2>
-                        <p class="text-xs text-slate-500 mt-1">Haz clic en cualquier encuentro para abrir el acta oficial, cargar goles y elegir al Jugador del Partido.</p>
+                        <p class="text-xs text-slate-500 mt-1">Filtra por fecha abajo o haz clic en cualquier encuentro para abrir el acta oficial, cargar goles y elegir al MVP.</p>
                     </div>
                     <div class="flex items-center space-x-3">
                         <span id="matches-progress" class="font-sport text-lg font-bold bg-slate-100 text-slate-800 px-3.5 py-1 rounded-lg border border-slate-200">0 / 0 Jugados</span>
                         <button onclick="generateKnockoutPhase()" class="bg-[#090a0f] hover:bg-slate-800 text-[#00e676] font-sport text-lg font-extrabold uppercase tracking-wider px-5 py-2 rounded-xl shadow transition border border-[#00e676]/40">
                             Avanzar a Fase Final &rarr;
                         </button>
+                    </div>
+                </div>
+
+                <!-- Barra selectora de Fechas (Fecha 1, Fecha 2, etc.) -->
+                <div class="bg-white px-5 py-3.5 rounded-2xl shadow-sm border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#ff1e42]"></span>
+                        <span class="font-sport text-lg font-extrabold uppercase tracking-wider text-slate-800">Filtrar por Jornada:</span>
+                    </div>
+                    <div id="rounds-filter-bar" class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+                        <!-- Botones generados dinámicamente por JS -->
                     </div>
                 </div>
 
@@ -336,7 +347,10 @@
                 <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200/90 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h2 class="font-sport text-3xl font-black text-slate-950 uppercase leading-none">Posiciones Oficiales FIFA 26</h2>
-                        <p class="text-xs text-slate-500 mt-1">Criterio de desempate: 1° Puntos (PTS), 2° Diferencia de Gol (DG), 3° Goles a Favor (GF).</p>
+                        <p class="text-xs text-slate-500 mt-1">
+                            <span class="inline-block bg-[#00b4d8]/15 text-[#090a0f] font-extrabold px-2 py-0.5 rounded mr-1">TIP</span>
+                            Haz clic sobre cualquier selección en la tabla para ver su historial de partidos jugados y los que se vienen.
+                        </p>
                     </div>
                     <div class="flex items-center space-x-2 text-xs font-bold text-slate-950 bg-[#00e676]/20 border border-[#00e676] px-3.5 py-2 rounded-xl">
                         <span class="w-2.5 h-2.5 rounded-full bg-[#00e676] inline-block"></span>
@@ -427,6 +441,89 @@
         </div>
 
     </main>
+
+    <!-- ==========================================
+         MODAL: HISTORIAL Y PRÓXIMOS PARTIDOS DE EQUIPO
+    =========================================== -->
+    <div id="team-history-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8">
+            <!-- Header del Equipo -->
+            <div class="wc26-panel-header px-6 py-5 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <span id="th-badge" class="font-sport text-3xl font-black px-3.5 py-1 rounded-xl border-2 border-white/20 shadow-lg">ARG</span>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span id="th-group" class="text-[11px] font-extrabold uppercase tracking-widest text-[#00e676]">Grupo A</span>
+                            <span id="th-pos-badge" class="text-[10px] font-extrabold uppercase tracking-wider bg-white/10 text-white px-2 py-0.5 rounded">Posición #1</span>
+                        </div>
+                        <h3 id="th-name" class="font-sport text-3xl sm:text-4xl font-black text-white uppercase leading-none mt-0.5">Argentina</h3>
+                    </div>
+                </div>
+                <button onclick="closeTeamHistoryModal()" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Cuerpo del Modal -->
+            <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+                
+                <!-- Resumen Estadístico y Plantel -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- Estadísticas Rápidas -->
+                    <div id="th-stats-bar" class="lg:col-span-7 bg-[#090a0f] text-white rounded-xl p-4 grid grid-cols-4 sm:grid-cols-8 gap-2 text-center items-center border border-slate-800">
+                        <!-- Inyectado por JS -->
+                    </div>
+                    <!-- Convocados y sus goles -->
+                    <div class="lg:col-span-5 bg-slate-50 rounded-xl p-3.5 border border-slate-200 flex flex-col justify-center">
+                        <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">Plantel Convocado (Goles / MVP)</div>
+                        <div id="th-players-list" class="grid grid-cols-3 gap-2">
+                            <!-- Inyectado por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columnas: Historial Jugados vs Próximos Partidos -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Columna 1: Partidos Jugados -->
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50 flex flex-col">
+                        <div class="bg-slate-900 text-white px-4 py-3 flex justify-between items-center border-b-2 border-[#00e676]">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-[#00e676]"></span>
+                                <h4 class="font-sport text-xl font-extrabold uppercase tracking-wider">Historial de Partidos Jugados</h4>
+                            </div>
+                            <span id="th-played-count" class="text-xs font-extrabold text-[#00e676]">0</span>
+                        </div>
+                        <div id="th-played-list" class="p-4 space-y-3 flex-grow">
+                            <!-- Inyectado por JS -->
+                        </div>
+                    </div>
+
+                    <!-- Columna 2: Próximos Partidos -->
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50 flex flex-col">
+                        <div class="bg-slate-900 text-white px-4 py-3 flex justify-between items-center border-b-2 border-[#00b4d8]">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-[#00b4d8]"></span>
+                                <h4 class="font-sport text-xl font-extrabold uppercase tracking-wider">Próximos Partidos (Por Jugar)</h4>
+                            </div>
+                            <span id="th-upcoming-count" class="text-xs font-extrabold text-[#00b4d8]">0</span>
+                        </div>
+                        <div id="th-upcoming-list" class="p-4 space-y-3 flex-grow">
+                            <!-- Inyectado por JS -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-slate-100 px-6 py-3.5 border-t border-slate-200 flex justify-between items-center">
+                <span class="text-xs text-slate-500">Puedes hacer clic en cualquier partido de la lista para cargar o editar su resultado.</span>
+                <button type="button" onclick="closeTeamHistoryModal()" class="bg-[#090a0f] hover:bg-slate-800 text-white font-sport text-base font-extrabold uppercase tracking-wider px-5 py-2 rounded-xl transition">
+                    Cerrar Ficha
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ==========================================
          MODAL: CARGAR RESULTADO Y GOLEADORES
@@ -603,6 +700,11 @@
             knockoutMatches: [] // Eliminatorias: Cuartos, Semis, Final
         };
 
+        // Filtro activo de fecha en la sección Partidos ('ALL' o número de fecha 1, 2, ...)
+        let selectedRoundFilter = 'ALL';
+        // Equipo actualmente abierto en el modal de historial
+        let activeHistoryTeamId = null;
+
         // Variables temporales para el modal de partido
         let activeMatchId = null;
         let isKnockoutModal = false;
@@ -625,6 +727,7 @@
                 try {
                     state = JSON.parse(saved);
                     if (state.status === 'ACTIVE') {
+                        ensureMatchesHaveRounds();
                         enterTournamentView();
                     } else {
                         renderSetupTeams();
@@ -634,6 +737,21 @@
                 }
             }
         };
+
+        // Garantiza compatibilidad si había un torneo guardado sin número de fecha
+        function ensureMatchesHaveRounds() {
+            state.groups.forEach(group => {
+                const gMatches = state.matches.filter(m => m.groupName === group.name);
+                const missingRound = gMatches.some(m => !m.round);
+                if (missingRound && gMatches.length > 0) {
+                    const n = group.teamIds.length;
+                    const perRound = Math.max(1, Math.floor(n / 2));
+                    gMatches.forEach((m, idx) => {
+                        m.round = Math.floor(idx / perRound) + 1;
+                    });
+                }
+            });
+        }
 
         function saveState() {
             localStorage.setItem('torneo3v3_state', JSON.stringify(state));
@@ -654,6 +772,15 @@
 
         function getTeam(id) {
             return state.teams.find(t => t.id === id);
+        }
+
+        function getTeamPosition(teamId) {
+            if (!teamId) return null;
+            const group = state.groups.find(g => g.teamIds.includes(teamId));
+            if (!group) return null;
+            const standings = calculateGroupStandings(group);
+            const idx = standings.findIndex(s => s.team.id === teamId);
+            return idx !== -1 ? idx + 1 : null;
         }
 
         function getPlayer(playerId) {
@@ -816,14 +943,16 @@
 
         function loadDemoData() {
             const demoCountries = [
-                { code: 'ARG', name: 'Argentina', bg: '#38bdf8', text: '#ffffff', players: ['Messi', 'Julián', 'Dibu'] },
-                { code: 'BRA', name: 'Brasil', bg: '#facc15', text: '#15803d', players: ['Vinicius', 'Rodrygo', 'Alisson'] },
-                { code: 'FRA', name: 'Francia', bg: '#1e3a8a', text: '#ef4444', players: ['Mbappé', 'Griezmann', 'Saliba'] },
-                { code: 'ESP', name: 'España', bg: '#dc2626', text: '#facc15', players: ['Lamine Yamal', 'Pedri', 'Rodri'] },
-                { code: 'URU', name: 'Uruguay', bg: '#60a5fa', text: '#0f172a', players: ['Valverde', 'Darwin', 'Araújo'] },
-                { code: 'ENG', name: 'Inglaterra', bg: '#f8fafc', text: '#dc2626', players: ['Bellingham', 'Foden', 'Kane'] },
-                { code: 'COL', name: 'Colombia', bg: '#fde047', text: '#1d4ed8', players: ['Luis Díaz', 'James', 'Richard Ríos'] },
-                { code: 'GER', name: 'Alemania', bg: '#171717', text: '#d97706', players: ['Musiala', 'Wirtz', 'Kroos'] }
+                { code: 'ARG', name: 'Argentina', bg: '#38bdf8', text: '#ffffff', players: ['Mombe', 'Suarez', 'Sebas'] },
+                { code: 'MAR', name: 'Marruecos', bg: '#b91c1c', text: '#15803d', players: ['Ricardi', 'Abdul', 'Danilo'] },
+                { code: 'USA', name: 'Estados Unidos', bg: '#1e3a8a', text: '#dc2626', players: ['Casas', 'Vazquez', 'Lopez'] },
+                { code: 'CAN', name: 'Canadá', bg: '#dc2626', text: '#ffffff', players: ['Amigo kons2', 'Amigo kons', 'kons'] },
+                { code: 'AYB', name: 'Antigua y barbuda', bg: '#334155', text: '#ffffff', players: ['Franpe', 'Prieto', 'Luquitas'] },
+                { code: 'ITA', name: 'Italia', bg: '#2563eb', text: '#ffffff', players: ['CUFA', 'BOURGUET', 'BETO'] },
+                { code: 'ESP', name: 'España', bg: '#dc2626', text: '#facc15', players: ['CHINO', 'AMADEY', 'MALAGRECA'] },
+                { code: 'CHL', name: 'Chile', bg: '#dc2626', text: '#1d4ed8', players: ['PUTRI', 'SILVA', 'NASTASI'] },
+                { code: 'NED', name: 'Países Bajos', bg: '#f97316', text: '#171717', players: ['teruya', 'manza', 'feva'] },
+                { code: 'CRO', name: 'Croacia', bg: '#ef4444', text: '#ffffff', players: ['kiki', 'cracco', 'ema'] }
             ];
 
             state.teams = demoCountries.map(c => ({
@@ -837,7 +966,7 @@
 
             saveState();
             renderSetupTeams();
-            showToast("8 Selecciones de prueba cargadas.");
+            showToast("10 Selecciones cargadas correctamente.");
         }
 
         /* ==========================================================================
@@ -853,7 +982,6 @@
         }
 
         // Genera un fixture equilibrado por Fechas (Método Round-Robin / Berger)
-        // Garantiza que ningún equipo juegue dos veces en la misma fecha y evita partidos consecutivos entre fechas
         function generateBalancedSchedule(teamIds, groupName) {
             let list = shuffleArray(teamIds);
             const isOdd = list.length % 2 !== 0;
@@ -874,7 +1002,6 @@
                     const away = list[n - 1 - i];
 
                     if (home !== 'BYE' && away !== 'BYE') {
-                        // Alternar localía de forma aleatoria
                         const swap = Math.random() > 0.5;
                         roundMatches.push({
                             id: 'm_' + uid(),
@@ -892,11 +1019,8 @@
                     }
                 }
 
-                // Mezclar orden de partidos dentro de la misma fecha
                 roundMatches = shuffleArray(roundMatches);
 
-                // Si hay más de 1 partido en la fecha, evitar que los equipos del último partido
-                // de la fecha anterior jueguen en el primer partido de esta nueva fecha
                 if (roundMatches.length > 1 && lastRoundLastPair.length > 0) {
                     const firstMatch = roundMatches[0];
                     if (lastRoundLastPair.includes(firstMatch.homeId) || lastRoundLastPair.includes(firstMatch.awayId)) {
@@ -906,8 +1030,6 @@
                         if (swapIdx > 0) {
                             [roundMatches[0], roundMatches[swapIdx]] = [roundMatches[swapIdx], roundMatches[0]];
                         } else {
-                            // Si no hay combinación totalmente libre (ej. grupos de 4 equipos),
-                            // al menos empujar ese cruce al final de la fecha para maximizar el descanso
                             roundMatches.push(roundMatches.shift());
                         }
                     }
@@ -920,7 +1042,6 @@
 
                 schedule.push(...roundMatches);
 
-                // Rotar equipos en sentido horario dejando fijo el primero (Algoritmo de Polígono)
                 const last = list.pop();
                 list.splice(1, 0, last);
             }
@@ -944,11 +1065,11 @@
                 showToast(`Para ${state.cupGroupsCount} grupos se recomienda al menos ${state.cupGroupsCount * 2} equipos.`);
             }
 
-            // Mezclar equipos aleatoriamente para el sorteo
             const shuffledTeams = shuffleArray(state.teams);
             state.groups = [];
             state.matches = [];
             state.knockoutMatches = [];
+            selectedRoundFilter = 'ALL';
 
             if (format === 'LEAGUE') {
                 state.groups.push({
@@ -963,14 +1084,12 @@
                         teamIds: []
                     });
                 }
-                // Repartir equipos equitativamente
                 shuffledTeams.forEach((team, index) => {
                     const groupIndex = index % state.cupGroupsCount;
                     state.groups[groupIndex].teamIds.push(team.id);
                 });
             }
 
-            // Generar partidos por Fechas equilibradas dentro de cada grupo/liga
             state.groups.forEach(group => {
                 const groupMatches = generateBalancedSchedule(group.teamIds, group.name);
                 state.matches.push(...groupMatches);
@@ -1001,13 +1120,15 @@
             renderStandings();
             renderStats();
             renderKnockout();
+            if (activeHistoryTeamId) {
+                renderTeamHistoryModalContent(activeHistoryTeamId);
+            }
         }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
 
-            // Actualizar botones desktop estilo FIFA 26
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = "nav-btn font-sport text-lg tracking-wider px-5 py-1.5 rounded-lg font-bold text-slate-200 hover:text-white hover:bg-white/10 transition-all";
             });
@@ -1016,7 +1137,6 @@
                 activeBtn.className = "nav-btn font-sport text-lg tracking-wider px-5 py-1.5 rounded-lg font-extrabold transition-all bg-[#00e676] text-slate-950 shadow-sm";
             }
 
-            // Actualizar botones mobile
             document.querySelectorAll('.nav-btn-m').forEach(btn => {
                 btn.className = "nav-btn-m font-sport text-base tracking-wider px-3.5 py-1 rounded font-bold text-slate-300";
             });
@@ -1029,98 +1149,430 @@
         }
 
         /* ==========================================================================
-           RENDERIZADO DE PARTIDOS (FIXTURE)
+           RENDERIZADO DE PARTIDOS (FIXTURE DIVIDIDO POR FECHAS)
            ========================================================================== */
+        function setRoundFilter(roundVal) {
+            selectedRoundFilter = roundVal;
+            renderMatches();
+        }
+
+        function renderRoundsFilterBar() {
+            const bar = document.getElementById('rounds-filter-bar');
+            if (!bar) return;
+
+            const roundsSet = new Set();
+            state.matches.forEach(m => {
+                if (m.round) roundsSet.add(m.round);
+            });
+            const rounds = Array.from(roundsSet).sort((a, b) => a - b);
+
+            if (selectedRoundFilter !== 'ALL' && !rounds.includes(selectedRoundFilter)) {
+                selectedRoundFilter = 'ALL';
+            }
+
+            const totalPlayed = state.matches.filter(m => m.played).length;
+            const allActive = selectedRoundFilter === 'ALL';
+
+            let buttonsHtml = `
+                <button onclick="setRoundFilter('ALL')" class="shrink-0 font-sport text-base tracking-wider px-4 py-1.5 rounded-xl font-extrabold uppercase transition flex items-center space-x-2 ${allActive ? 'bg-[#090a0f] text-[#00e676] shadow-md border border-[#00e676]/50' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+                    <span>Todas las Fechas</span>
+                    <span class="text-[11px] px-1.5 py-0.2 rounded ${allActive ? 'bg-white/10 text-white' : 'bg-slate-200 text-slate-600'}">${totalPlayed}/${state.matches.length}</span>
+                </button>
+            `;
+
+            rounds.forEach(r => {
+                const rMatches = state.matches.filter(m => m.round === r);
+                const rPlayed = rMatches.filter(m => m.played).length;
+                const isComplete = rMatches.length > 0 && rPlayed === rMatches.length;
+                const isActive = selectedRoundFilter === r;
+
+                buttonsHtml += `
+                    <button onclick="setRoundFilter(${r})" class="shrink-0 font-sport text-base tracking-wider px-3.5 py-1.5 rounded-xl font-extrabold uppercase transition flex items-center space-x-1.5 ${isActive ? 'bg-[#ff1e42] text-white shadow-md' : isComplete ? 'bg-[#00e676]/15 hover:bg-[#00e676]/25 text-slate-900 border border-[#00e676]/40' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+                        <span>Fecha ${r}</span>
+                        <span class="text-[11px] px-1.5 py-0.2 rounded font-sans font-bold ${isActive ? 'bg-black/25 text-white' : isComplete ? 'bg-[#00e676] text-slate-950' : 'bg-slate-200 text-slate-600'}">
+                            ${isComplete ? '✓' : `${rPlayed}/${rMatches.length}`}
+                        </span>
+                    </button>
+                `;
+            });
+
+            bar.innerHTML = buttonsHtml;
+        }
+
+        function renderMatchCard(m, idxLabel) {
+            const home = getTeam(m.homeId);
+            const away = getTeam(m.awayId);
+            if (!home || !away) return '';
+
+            const homePos = getTeamPosition(home.id);
+            const awayPos = getTeamPosition(away.id);
+
+            let scorersSummary = [];
+            if (m.played && m.goals) {
+                Object.entries(m.goals).forEach(([pid, qty]) => {
+                    if (qty > 0) {
+                        const pInfo = getPlayer(pid);
+                        if (pInfo) scorersSummary.push(`${pInfo.name} (${qty})`);
+                    }
+                });
+            }
+            const mvpInfo = m.mvpId ? getPlayer(m.mvpId) : null;
+
+            return `
+                <div onclick="openMatchModal('${m.id}', false)" class="cursor-pointer border-2 ${m.played ? 'border-slate-200 bg-white' : 'border-slate-200/80 bg-slate-50/70'} hover:border-[#00b4d8] rounded-xl p-3.5 transition shadow-sm hover:shadow-md">
+                    <div class="flex justify-between items-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">
+                        <span>${m.round ? `Fecha ${m.round} • ` : ''}${idxLabel}</span>
+                        <span class="${m.played ? 'text-slate-950 bg-[#00e676] px-2 py-0.5 rounded' : 'text-[#ff1e42] bg-[#ff1e42]/10 px-2 py-0.5 rounded'}">
+                            ${m.played ? 'Finalizado' : 'Por Jugar'}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <!-- Local -->
+                        <div class="flex items-center space-x-2 flex-1 min-w-0">
+                            <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm shrink-0">
+                                ${home.code}
+                            </span>
+                            <div class="flex items-center space-x-1.5 min-w-0">
+                                <span class="font-sport text-xl font-extrabold text-slate-900 truncate">${home.name}</span>
+                                ${homePos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded shrink-0">${homePos}°</span>` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Marcador estilo TV FIFA 26 -->
+                        <div class="px-3 flex items-center space-x-1.5 shrink-0">
+                            ${m.played ? `
+                                <span class="font-sport text-2xl font-black w-8 py-0.5 rounded bg-slate-950 text-center ${m.homeScore > m.awayScore ? 'text-[#00e676]' : 'text-white'}">${m.homeScore}</span>
+                                <span class="text-xs text-slate-400 font-bold">:</span>
+                                <span class="font-sport text-2xl font-black w-8 py-0.5 rounded bg-slate-950 text-center ${m.awayScore > m.homeScore ? 'text-[#00e676]' : 'text-white'}">${m.awayScore}</span>
+                            ` : `
+                                <span class="font-sport text-sm font-black text-white bg-slate-950 px-3 py-1 rounded tracking-widest">VS</span>
+                            `}
+                        </div>
+
+                        <!-- Visitante -->
+                        <div class="flex items-center justify-end space-x-2 flex-1 text-right min-w-0">
+                            <div class="flex items-center justify-end space-x-1.5 min-w-0">
+                                ${awayPos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded shrink-0">${awayPos}°</span>` : ''}
+                                <span class="font-sport text-xl font-extrabold text-slate-900 truncate">${away.name}</span>
+                            </div>
+                            <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm shrink-0">
+                                ${away.code}
+                            </span>
+                        </div>
+                    </div>
+
+                    ${m.played && (scorersSummary.length > 0 || mvpInfo) ? `
+                        <div class="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap justify-between items-center gap-2 text-[11px] text-slate-500">
+                            <div class="truncate">
+                                ${scorersSummary.length > 0 ? `<strong class="text-slate-800 uppercase">Goles:</strong> ${scorersSummary.join(', ')}` : 'Sin goles de jugadores registrados'}
+                            </div>
+                            ${mvpInfo ? `<span class="bg-[#090a0f] text-[#00b4d8] font-extrabold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">MVP: ${mvpInfo.name}</span>` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
         function renderMatches() {
+            renderRoundsFilterBar();
+
             const container = document.getElementById('matches-container');
             const playedCount = state.matches.filter(m => m.played).length;
             document.getElementById('matches-progress').textContent = `${playedCount} / ${state.matches.length} Jugados`;
 
-            // Agrupar por groupName
             const htmlGroups = state.groups.map(group => {
-                const groupMatches = state.matches.filter(m => m.groupName === group.name);
-                
-                const matchesHtml = groupMatches.map((m, idx) => {
-                    const home = getTeam(m.homeId);
-                    const away = getTeam(m.awayId);
-                    if (!home || !away) return '';
+                const allGroupMatches = state.matches.filter(m => m.groupName === group.name);
+                const roundsInGroup = Array.from(new Set(allGroupMatches.map(m => m.round || 1))).sort((a, b) => a - b);
+                const roundsToShow = selectedRoundFilter === 'ALL'
+                    ? roundsInGroup
+                    : roundsInGroup.filter(r => r === selectedRoundFilter);
 
-                    // Resumen de goleadores para mostrar debajo del partido
-                    let scorersSummary = [];
-                    if (m.played && m.goals) {
-                        Object.entries(m.goals).forEach(([pid, qty]) => {
-                            if (qty > 0) {
-                                const pInfo = getPlayer(pid);
-                                if (pInfo) scorersSummary.push(`${pInfo.name} (${qty})`);
-                            }
-                        });
-                    }
-                    const mvpInfo = m.mvpId ? getPlayer(m.mvpId) : null;
+                if (roundsToShow.length === 0) {
+                    return `
+                        <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden ${state.format === 'LEAGUE' ? 'md:col-span-2' : ''}">
+                            <div class="wc26-panel-header px-5 py-3.5 flex justify-between items-center">
+                                <h3 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">${group.name}</h3>
+                                <span class="text-xs text-slate-300 font-extrabold uppercase tracking-wider">Sin partidos en esta fecha</span>
+                            </div>
+                            <div class="p-6 text-center text-xs text-slate-400">Esta zona no tiene encuentros programados para la Fecha ${selectedRoundFilter}.</div>
+                        </div>
+                    `;
+                }
+
+                // Construir bloques divididos por Fecha (Fecha 1, Fecha 2, etc.)
+                const roundsBlocksHtml = roundsToShow.map(roundNum => {
+                    const roundMatches = allGroupMatches.filter(m => (m.round || 1) === roundNum);
+                    const playedInRound = roundMatches.filter(m => m.played).length;
+
+                    // Detectar si algún equipo del grupo queda Libre en esta fecha (grupos impares)
+                    const activeTeamIds = new Set();
+                    roundMatches.forEach(m => {
+                        activeTeamIds.add(m.homeId);
+                        activeTeamIds.add(m.awayId);
+                    });
+                    const byeTeams = group.teamIds
+                        .filter(tid => !activeTeamIds.has(tid))
+                        .map(tid => getTeam(tid))
+                        .filter(Boolean);
+
+                    const cardsHtml = roundMatches.map(m => {
+                        const globalIdx = allGroupMatches.indexOf(m) + 1;
+                        return renderMatchCard(m, `Partido #${globalIdx}`);
+                    }).join('');
 
                     return `
-                        <div onclick="openMatchModal('${m.id}', false)" class="cursor-pointer border-2 ${m.played ? 'border-slate-200 bg-white' : 'border-slate-200/80 bg-slate-50/70'} hover:border-[#00b4d8] rounded-xl p-3.5 transition shadow-sm hover:shadow-md">
-                            <div class="flex justify-between items-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">
-                                <span>${m.round ? `Fecha ${m.round} • ` : ''}Partido #${idx + 1}</span>
-                                <span class="${m.played ? 'text-slate-950 bg-[#00e676] px-2 py-0.5 rounded' : 'text-[#ff1e42] bg-[#ff1e42]/10 px-2 py-0.5 rounded'}">
-                                    ${m.played ? 'Finalizado' : 'Por Jugar'}
-                                </span>
-                            </div>
-
-                            <div class="flex items-center justify-between">
-                                <!-- Local -->
-                                <div class="flex items-center space-x-2.5 flex-1">
-                                    <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm">
-                                        ${home.code}
-                                    </span>
-                                    <span class="font-sport text-xl font-extrabold text-slate-900 truncate">${home.name}</span>
+                        <div class="space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-900 text-white px-4 py-2 rounded-xl border-l-4 border-[#00b4d8]">
+                                <div class="flex items-center space-x-2.5">
+                                    <span class="font-sport text-xl font-black uppercase tracking-wider text-[#00e676]">Fecha ${roundNum}</span>
+                                    <span class="text-[11px] text-slate-300 font-bold uppercase tracking-wider">(${playedInRound}/${roundMatches.length} Jugados)</span>
                                 </div>
-
-                                <!-- Marcador estilo TV FIFA 26 -->
-                                <div class="px-3 flex items-center space-x-1.5">
-                                    ${m.played ? `
-                                        <span class="font-sport text-2xl font-black w-8 py-0.5 rounded bg-slate-950 text-center ${m.homeScore > m.awayScore ? 'text-[#00e676]' : 'text-white'}">${m.homeScore}</span>
-                                        <span class="text-xs text-slate-400 font-bold">:</span>
-                                        <span class="font-sport text-2xl font-black w-8 py-0.5 rounded bg-slate-950 text-center ${m.awayScore > m.homeScore ? 'text-[#00e676]' : 'text-white'}">${m.awayScore}</span>
-                                    ` : `
-                                        <span class="font-sport text-sm font-black text-white bg-slate-950 px-3 py-1 rounded tracking-widest">VS</span>
-                                    `}
-                                </div>
-
-                                <!-- Visitante -->
-                                <div class="flex items-center justify-end space-x-2.5 flex-1 text-right">
-                                    <span class="font-sport text-xl font-extrabold text-slate-900 truncate">${away.name}</span>
-                                    <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm">
-                                        ${away.code}
-                                    </span>
-                                </div>
-                            </div>
-
-                            ${m.played && (scorersSummary.length > 0 || mvpInfo) ? `
-                                <div class="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap justify-between items-center gap-2 text-[11px] text-slate-500">
-                                    <div class="truncate">
-                                        ${scorersSummary.length > 0 ? `<strong class="text-slate-800 uppercase">Goles:</strong> ${scorersSummary.join(', ')}` : 'Sin goles de jugadores registrados'}
+                                ${byeTeams.length > 0 ? `
+                                    <div class="flex items-center space-x-1.5 text-xs">
+                                        <span class="text-amber-400 font-extrabold uppercase tracking-wider text-[11px]">Fecha Libre:</span>
+                                        ${byeTeams.map(bt => `
+                                            <span style="background-color:${bt.colorBg}; color:${bt.colorText}" class="font-sport text-xs font-extrabold px-2 py-0.5 rounded">${bt.code} ${bt.name}</span>
+                                        `).join('')}
                                     </div>
-                                    ${mvpInfo ? `<span class="bg-[#090a0f] text-[#00b4d8] font-extrabold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">MVP: ${mvpInfo.name}</span>` : ''}
-                                </div>
-                            ` : ''}
+                                ` : ''}
+                            </div>
+                            <div class="grid grid-cols-1 ${state.format === 'LEAGUE' ? 'md:grid-cols-2' : ''} gap-3">
+                                ${cardsHtml}
+                            </div>
                         </div>
                     `;
                 }).join('');
+
+                const shownMatchesCount = selectedRoundFilter === 'ALL'
+                    ? allGroupMatches.length
+                    : allGroupMatches.filter(m => m.round === selectedRoundFilter).length;
 
                 return `
                     <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden ${state.format === 'LEAGUE' ? 'md:col-span-2' : ''}">
                         <div class="wc26-panel-header px-5 py-3.5 flex justify-between items-center">
                             <h3 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">${group.name}</h3>
-                            <span class="text-xs text-[#00e676] font-extrabold uppercase tracking-wider">${groupMatches.length} Partidos</span>
+                            <span class="text-xs text-[#00e676] font-extrabold uppercase tracking-wider">
+                                ${selectedRoundFilter === 'ALL' ? `${allGroupMatches.length} Partidos (${roundsInGroup.length} Fechas)` : `Fecha ${selectedRoundFilter} • ${shownMatchesCount} Partidos`}
+                            </span>
                         </div>
-                        <div class="p-4 grid grid-cols-1 ${state.format === 'LEAGUE' ? 'md:grid-cols-2' : ''} gap-3">
-                            ${matchesHtml}
+                        <div class="p-4 space-y-5">
+                            ${roundsBlocksHtml}
                         </div>
                     </div>
                 `;
             }).join('');
 
             container.innerHTML = htmlGroups;
+        }
+
+        /* ==========================================================================
+           MODAL DE HISTORIAL Y PRÓXIMOS PARTIDOS DE EQUIPO
+           ========================================================================== */
+        function openTeamHistoryModal(teamId) {
+            activeHistoryTeamId = teamId;
+            renderTeamHistoryModalContent(teamId);
+            document.getElementById('team-history-modal').classList.remove('hidden');
+        }
+
+        function closeTeamHistoryModal() {
+            document.getElementById('team-history-modal').classList.add('hidden');
+            activeHistoryTeamId = null;
+        }
+
+        function openMatchFromHistory(matchId, isKnockout) {
+            openMatchModal(matchId, isKnockout);
+        }
+
+        function renderTeamHistoryModalContent(teamId) {
+            const team = getTeam(teamId);
+            if (!team) return;
+
+            // Encontrar su grupo y posición actual
+            const group = state.groups.find(g => g.teamIds.includes(teamId)) || state.groups[0];
+            const standings = group ? calculateGroupStandings(group) : [];
+            const posIndex = standings.findIndex(s => s.team.id === teamId);
+            const teamStats = posIndex !== -1 ? standings[posIndex] : { pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, dg: 0, pts: 0 };
+
+            // Cabecera
+            const badge = document.getElementById('th-badge');
+            badge.textContent = team.code;
+            badge.style.backgroundColor = team.colorBg;
+            badge.style.color = team.colorText;
+
+            document.getElementById('th-name').textContent = team.name;
+            document.getElementById('th-group').textContent = group ? group.name : '';
+            document.getElementById('th-pos-badge').textContent = posIndex !== -1 ? `Posición #${posIndex + 1}` : 'Sin Posición';
+
+            // Estadísticas de la Selección
+            document.getElementById('th-stats-bar').innerHTML = `
+                <div><div class="text-[10px] text-slate-400 font-bold uppercase">PTS</div><div class="font-sport text-2xl font-black text-[#00e676]">${teamStats.pts}</div></div>
+                <div><div class="text-[10px] text-slate-400 font-bold uppercase">PJ</div><div class="font-sport text-2xl font-bold">${teamStats.pj}</div></div>
+                <div><div class="text-[10px] text-slate-400 font-bold uppercase">PG</div><div class="font-sport text-2xl font-bold text-emerald-400">${teamStats.pg}</div></div>
+                <div><div class="text-[10px] text-slate-400 font-bold uppercase">PE</div><div class="font-sport text-2xl font-bold text-slate-300">${teamStats.pe}</div></div>
+                <div><div class="text-[10px] text-slate-400 font-bold uppercase">PP</div><div class="font-sport text-2xl font-bold text-[#ff1e42]">${teamStats.pp}</div></div>
+                <div><div class="text-[10px] text-slate-400 font-bold uppercase">GF</div><div class="font-sport text-2xl font-bold">${teamStats.gf}</div></div>
+                <div><div class="text-[10px] text-slate-400 font-bold uppercase">GC</div><div class="font-sport text-2xl font-bold">${teamStats.gc}</div></div>
+                <div><div class="text-[10px] text-slate-400 font-bold uppercase">DG</div><div class="font-sport text-2xl font-bold">${teamStats.dg > 0 ? '+' + teamStats.dg : teamStats.dg}</div></div>
+            `;
+
+            // Goles y MVPs de los 3 jugadores
+            const allPlayed = [...state.matches.filter(m => m.played), ...state.knockoutMatches.filter(m => m.played)];
+            document.getElementById('th-players-list').innerHTML = team.players.map(p => {
+                let pGoals = 0;
+                let pMvps = 0;
+                allPlayed.forEach(m => {
+                    if (m.goals && m.goals[p.id]) pGoals += m.goals[p.id];
+                    if (m.mvpId === p.id) pMvps += 1;
+                });
+                return `
+                    <div class="bg-white p-2 rounded-lg border border-slate-200 text-center">
+                        <div class="text-xs font-extrabold text-slate-900 truncate">${p.name}</div>
+                        <div class="flex items-center justify-center space-x-2 mt-1 text-[11px] font-bold">
+                            <span class="text-emerald-700">${pGoals} Goles</span>
+                            ${pMvps > 0 ? `<span class="bg-amber-100 text-amber-900 px-1.5 rounded text-[10px]">${pMvps} MVP</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Recolectar todos los partidos de este equipo (Fase Regular + Fase Final)
+            const teamRegularMatches = state.matches
+                .filter(m => m.homeId === teamId || m.awayId === teamId)
+                .map(m => ({ ...m, isKnockout: false }));
+
+            const teamKnockoutMatches = state.knockoutMatches
+                .filter(m => m.homeId === teamId || m.awayId === teamId)
+                .map(m => ({ ...m, isKnockout: true }));
+
+            const allTeamMatches = [...teamRegularMatches, ...teamKnockoutMatches];
+
+            const playedMatches = allTeamMatches.filter(m => m.played);
+            const upcomingMatches = allTeamMatches.filter(m => !m.played);
+
+            document.getElementById('th-played-count').textContent = `${playedMatches.length} Jugados`;
+            document.getElementById('th-upcoming-count').textContent = `${upcomingMatches.length} Pendientes`;
+
+            // Renderizar Historial de Jugados
+            const playedContainer = document.getElementById('th-played-list');
+            if (playedMatches.length === 0) {
+                playedContainer.innerHTML = `
+                    <div class="text-center py-10 text-xs text-slate-400">
+                        Esta selección aún no ha disputado ningún partido en el torneo.
+                    </div>
+                `;
+            } else {
+                playedContainer.innerHTML = playedMatches.map(m => {
+                    const isHome = m.homeId === teamId;
+                    const rivalId = isHome ? m.awayId : m.homeId;
+                    const rival = getTeam(rivalId);
+                    const myGoals = isHome ? m.homeScore : m.awayScore;
+                    const rivalGoals = isHome ? m.awayScore : m.homeScore;
+
+                    let resultBadge = '';
+                    let cardBorder = 'border-slate-200';
+                    if (myGoals > rivalGoals || (m.isKnockout && m.winnerId === teamId)) {
+                        resultBadge = `<span class="bg-[#00e676] text-slate-950 font-extrabold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">${myGoals === rivalGoals ? 'Victoria (Pen)' : 'Victoria'}</span>`;
+                        cardBorder = 'border-[#00e676]/60';
+                    } else if (myGoals < rivalGoals || (m.isKnockout && m.winnerId && m.winnerId !== teamId)) {
+                        resultBadge = `<span class="bg-[#ff1e42] text-white font-extrabold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">${myGoals === rivalGoals ? 'Derrota (Pen)' : 'Derrota'}</span>`;
+                        cardBorder = 'border-[#ff1e42]/40';
+                    } else {
+                        resultBadge = `<span class="bg-slate-200 text-slate-800 font-extrabold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">Empate</span>`;
+                    }
+
+                    const stageLabel = m.isKnockout
+                        ? m.stageName
+                        : `${m.groupName}${m.round ? ` • Fecha ${m.round}` : ''}`;
+
+                    // Goleadores del partido
+                    let scorersText = [];
+                    if (m.goals) {
+                        Object.entries(m.goals).forEach(([pid, qty]) => {
+                            if (qty > 0) {
+                                const pl = getPlayer(pid);
+                                if (pl) scorersText.push(`${pl.name} (${qty})`);
+                            }
+                        });
+                    }
+
+                    return `
+                        <div onclick="openMatchFromHistory('${m.id}', ${m.isKnockout})" class="cursor-pointer bg-white rounded-xl p-3.5 border-2 ${cardBorder} hover:border-[#00b4d8] transition shadow-sm">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">${stageLabel}</span>
+                                ${resultBadge}
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span style="background-color:${team.colorBg}; color:${team.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded">${team.code}</span>
+                                    <span class="font-sport text-lg font-extrabold text-slate-900">${team.name}</span>
+                                    ${getTeamPosition(team.id) ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${getTeamPosition(team.id)}°</span>` : ''}
+                                </div>
+                                <div class="px-3 flex items-center space-x-1.5">
+                                    <span class="font-sport text-2xl font-black px-2.5 py-0.5 rounded bg-slate-950 text-[#00e676]">${myGoals}</span>
+                                    <span class="text-xs text-slate-400 font-bold">-</span>
+                                    <span class="font-sport text-2xl font-black px-2.5 py-0.5 rounded bg-slate-950 text-white">${rivalGoals}</span>
+                                </div>
+                                <div class="flex items-center space-x-2 text-right">
+                                    ${rival && getTeamPosition(rival.id) ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${getTeamPosition(rival.id)}°</span>` : ''}
+                                    <span class="font-sport text-lg font-extrabold text-slate-900">${rival ? rival.name : 'TBD'}</span>
+                                    ${rival ? `<span style="background-color:${rival.colorBg}; color:${rival.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded">${rival.code}</span>` : ''}
+                                </div>
+                            </div>
+                            ${scorersText.length > 0 ? `
+                                <div class="mt-2 pt-1.5 border-t border-slate-100 text-[11px] text-slate-500 truncate">
+                                    <strong class="text-slate-700 uppercase">Goles:</strong> ${scorersText.join(', ')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Renderizar Próximos Partidos
+            const upcomingContainer = document.getElementById('th-upcoming-list');
+            if (upcomingMatches.length === 0) {
+                upcomingContainer.innerHTML = `
+                    <div class="text-center py-10 text-xs text-slate-400">
+                        No quedan partidos pendientes programados para esta selección.
+                    </div>
+                `;
+            } else {
+                upcomingContainer.innerHTML = upcomingMatches.map((m, idx) => {
+                    const isHome = m.homeId === teamId;
+                    const rivalId = isHome ? m.awayId : m.homeId;
+                    const rival = getTeam(rivalId);
+                    const stageLabel = m.isKnockout
+                        ? m.stageName
+                        : `${m.groupName}${m.round ? ` • Fecha ${m.round}` : ''}`;
+
+                    return `
+                        <div onclick="${rival ? `openMatchFromHistory('${m.id}', ${m.isKnockout})` : ''}" class="${rival ? 'cursor-pointer hover:border-[#00b4d8]' : 'opacity-70'} bg-white rounded-xl p-3.5 border-2 border-slate-200 transition shadow-sm">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#00b4d8]">${stageLabel}</span>
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
+                                    ${idx === 0 ? 'Próximo Partido' : 'Por Jugar'}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span style="background-color:${team.colorBg}; color:${team.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded">${team.code}</span>
+                                    <span class="font-sport text-lg font-extrabold text-slate-900">${team.name}</span>
+                                    ${getTeamPosition(team.id) ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${getTeamPosition(team.id)}°</span>` : ''}
+                                </div>
+                                <span class="font-sport text-xs font-black text-white bg-slate-950 px-2.5 py-1 rounded tracking-widest">VS</span>
+                                <div class="flex items-center space-x-2 text-right">
+                                    ${rival ? `
+                                        ${getTeamPosition(rival.id) ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${getTeamPosition(rival.id)}°</span>` : ''}
+                                        <span class="font-sport text-lg font-extrabold text-slate-900">${rival.name}</span>
+                                        <span style="background-color:${rival.colorBg}; color:${rival.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded">${rival.code}</span>
+                                    ` : `<span class="text-xs text-slate-400 italic">Rival a definir</span>`}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         /* ==========================================================================
@@ -1141,7 +1593,6 @@
                 return;
             }
 
-            // Clonar goles actuales
             modalTempGoals = { ...(match.goals || {}) };
             modalExtraGoals = { ...(match.extraGoals || { home: 0, away: 0 }) };
 
@@ -1152,20 +1603,21 @@
             homeBadge.textContent = home.code;
             homeBadge.style.backgroundColor = home.colorBg;
             homeBadge.style.color = home.colorText;
-            document.getElementById('modal-home-name').textContent = home.name;
+            const homePos = getTeamPosition(home.id);
+            document.getElementById('modal-home-name').textContent = homePos ? `${home.name} (${homePos}°)` : home.name;
             document.getElementById('modal-home-list-title').textContent = `Jugadores ${home.name}`;
 
             const awayBadge = document.getElementById('modal-away-badge');
             awayBadge.textContent = away.code;
             awayBadge.style.backgroundColor = away.colorBg;
             awayBadge.style.color = away.colorText;
-            document.getElementById('modal-away-name').textContent = away.name;
+            const awayPos = getTeamPosition(away.id);
+            document.getElementById('modal-away-name').textContent = awayPos ? `${away.name} (${awayPos}°)` : away.name;
             document.getElementById('modal-away-list-title').textContent = `Jugadores ${away.name}`;
 
             renderModalPlayerInputs(home, 'modal-home-players');
             renderModalPlayerInputs(away, 'modal-away-players');
 
-            // Poblar selector MVP
             const mvpSelect = document.getElementById('modal-mvp-select');
             const allMatchPlayers = [
                 ...home.players.map(p => ({ ...p, teamCode: home.code })),
@@ -1174,7 +1626,6 @@
             mvpSelect.innerHTML = `<option value="">-- Sin elegir figura --</option>` + 
                 allMatchPlayers.map(p => `<option value="${p.id}" ${match.mvpId === p.id ? 'selected' : ''}>${p.name} (${p.teamCode})</option>`).join('');
 
-            // Poblar selector de desempate en caso de Knockout
             const winnerSelect = document.getElementById('modal-knockout-winner');
             winnerSelect.innerHTML = `
                 <option value="${home.id}" ${match.penaltyWinnerId === home.id ? 'selected' : ''}>Avanza ${home.name}</option>
@@ -1217,7 +1668,6 @@
 
             display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-            // Color según estado del reloj
             if (timerRemainingSeconds === 0) {
                 display.className = "font-sport text-3xl sm:text-4xl font-black tracking-wider text-[#ff1e42] leading-none animate-pulse";
                 statusLabel.textContent = "¡Tiempo Cumplido!";
@@ -1358,7 +1808,6 @@
             document.getElementById('modal-home-score').textContent = homeSum;
             document.getElementById('modal-away-score').textContent = awaySum;
 
-            // Si es partido eliminatorio y están empatados, mostrar selector de ganador
             const tieBox = document.getElementById('modal-tiebreaker-box');
             if (isKnockoutModal && homeSum === awaySum) {
                 tieBox.classList.remove('hidden');
@@ -1496,7 +1945,7 @@
                                 <thead>
                                     <tr class="bg-slate-950/5 text-slate-700 font-sport text-base tracking-wider uppercase border-b border-slate-200">
                                         <th class="py-3 px-4 font-extrabold w-12 text-center">Pos</th>
-                                        <th class="py-3 px-4 font-extrabold">Selección</th>
+                                        <th class="py-3 px-4 font-extrabold">Selección (Clic para ver fixture)</th>
                                         <th class="py-3 px-3 font-extrabold text-center">PJ</th>
                                         <th class="py-3 px-3 font-extrabold text-center">G</th>
                                         <th class="py-3 px-3 font-extrabold text-center">E</th>
@@ -1513,20 +1962,25 @@
                                         const pos = idx + 1;
                                         const isQualifying = cutoff > 0 ? pos <= cutoff : pos === 1;
                                         return `
-                                            <tr class="${isQualifying ? 'bg-[#00e676]/5' : ''} hover:bg-slate-50 transition">
+                                            <tr onclick="openTeamHistoryModal('${r.team.id}')" class="group cursor-pointer ${isQualifying ? 'bg-[#00e676]/5' : ''} hover:bg-[#00b4d8]/10 transition">
                                                 <td class="py-3.5 px-4 font-bold text-center">
                                                     <span class="w-6 h-6 rounded-md font-sport text-base inline-flex items-center justify-center font-black ${isQualifying ? 'bg-[#00e676] text-slate-950' : 'bg-slate-200 text-slate-700'}">
                                                         ${pos}
                                                     </span>
                                                 </td>
                                                 <td class="py-3.5 px-4">
-                                                    <div class="flex items-center space-x-3">
-                                                        <span style="background-color:${r.team.colorBg}; color:${r.team.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm">
-                                                            ${r.team.code}
-                                                        </span>
-                                                        <div>
-                                                            <div class="font-sport text-xl font-extrabold text-slate-950 leading-none">${r.team.name}</div>
-                                                            <div class="text-[11px] text-slate-400 mt-0.5">${r.team.players.map(p => p.name).join(', ')}</div>
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center space-x-3">
+                                                            <span style="background-color:${r.team.colorBg}; color:${r.team.colorText}" class="font-sport text-base font-extrabold px-2 py-0.5 rounded border border-black/10 w-11 text-center shadow-sm">
+                                                                ${r.team.code}
+                                                            </span>
+                                                            <div>
+                                                                <div class="font-sport text-xl font-extrabold text-slate-950 group-hover:text-[#00b4d8] transition leading-none flex items-center space-x-2">
+                                                                    <span>${r.team.name}</span>
+                                                                    <span class="text-[10px] font-sans font-extrabold uppercase tracking-wider bg-slate-900 text-[#00e676] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">Ver Partidos &rarr;</span>
+                                                                </div>
+                                                                <div class="text-[11px] text-slate-400 mt-0.5">${r.team.players.map(p => p.name).join(', ')}</div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -1567,7 +2021,6 @@
             const goalsMap = {};
             const mvpMap = {};
 
-            // Inicializar todos los jugadores con 0
             state.teams.forEach(t => {
                 t.players.forEach(p => {
                     goalsMap[p.id] = 0;
@@ -1591,7 +2044,6 @@
                 }
             });
 
-            // Ordenar goleadores
             const scorersList = Object.entries(goalsMap)
                 .map(([pid, goals]) => ({ ...getPlayer(pid), goals }))
                 .filter(item => item.goals > 0)
@@ -1616,7 +2068,6 @@
                 `).join('');
             }
 
-            // Ordenar MVPs
             const mvpList = Object.entries(mvpMap)
                 .map(([pid, count]) => ({ ...getPlayer(pid), count }))
                 .filter(item => item.count > 0)
@@ -1662,7 +2113,6 @@
                 }
                 qualifiedTeams = table.slice(0, qCount).map(r => r.team.id);
             } else {
-                // Formato Copa: Recoger los clasificados de cada grupo con cruces oficiales entre grupos distintos
                 const groupTables = state.groups.map(g => calculateGroupStandings(g));
                 const qPerGroup = state.cupQualifiersPerGroup;
 
@@ -1670,15 +2120,10 @@
                     const gA = groupTables[0] || [];
                     const gB = groupTables[1] || [];
                     if (qPerGroup === 1 && gA[0] && gB[0]) {
-                        // Final directa: 1A vs 1B
                         qualifiedTeams = [gA[0].team.id, gB[0].team.id];
                     } else if (qPerGroup === 2 && gA.length >= 2 && gB.length >= 2) {
-                        // Semis cruzadas (recordar que el armado usa [0] vs [3] y [1] vs [2]):
-                        // Semi 1: 1A [0] vs 2B [3] | Semi 2: 1B [1] vs 2A [2]
                         qualifiedTeams = [gA[0].team.id, gB[0].team.id, gA[1].team.id, gB[1].team.id];
                     } else if (qPerGroup === 4 && gA.length >= 4 && gB.length >= 4) {
-                        // Cuartos cruzados (el armado usa [i] vs [7 - i]):
-                        // QF1: 1A [0] vs 4B [7] | QF2: 2B [1] vs 3A [6] | QF3: 1B [2] vs 4A [5] | QF4: 2A [3] vs 3B [4]
                         qualifiedTeams = [
                             gA[0].team.id, gB[1].team.id, gB[0].team.id, gA[1].team.id,
                             gB[2].team.id, gA[3].team.id, gA[2].team.id, gB[3].team.id
@@ -1690,11 +2135,8 @@
                     const gC = groupTables[2] || [];
                     const gD = groupTables[3] || [];
                     if (qPerGroup === 1 && gA[0] && gB[0] && gC[0] && gD[0]) {
-                        // Semis cruzadas: 1A vs 1B y 1C vs 1D
                         qualifiedTeams = [gA[0].team.id, gC[0].team.id, gD[0].team.id, gB[0].team.id];
                     } else if (qPerGroup === 2 && gA.length >= 2 && gB.length >= 2 && gC.length >= 2 && gD.length >= 2) {
-                        // Cuartos cruzados estilo Mundial:
-                        // QF1: 1A [0] vs 2B [7] | QF2: 1C [1] vs 2D [6] | QF3: 1B [2] vs 2A [5] | QF4: 1D [3] vs 2C [4]
                         qualifiedTeams = [
                             gA[0].team.id, gC[0].team.id, gB[0].team.id, gD[0].team.id,
                             gC[1].team.id, gA[1].team.id, gD[1].team.id, gB[1].team.id
@@ -1702,7 +2144,6 @@
                     }
                 }
                 
-                // Fallback general si faltan equipos en algún grupo
                 if (qualifiedTeams.length === 0) {
                     let allQualifiers = [];
                     groupTables.forEach(table => {
@@ -1717,7 +2158,6 @@
             const total = qualifiedTeams.length;
 
             if (total >= 8) {
-                // Cuartos de Final (4 partidos) + Semis (2) + Final (1)
                 for (let i = 0; i < 4; i++) {
                     state.knockoutMatches.push({
                         id: `ko_qf_${i}`,
@@ -1745,7 +2185,6 @@
                     played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
                 });
             } else if (total >= 4) {
-                // Semifinales (2 partidos) + Final (1)
                 state.knockoutMatches.push({
                     id: `ko_sf_0`,
                     stage: 'SF',
@@ -1770,7 +2209,6 @@
                     played: false, homeScore: 0, awayScore: 0, goals: {}, extraGoals: {home:0,away:0}, winnerId: null
                 });
             } else if (total >= 2) {
-                // Final Directa
                 state.knockoutMatches.push({
                     id: `ko_f_0`,
                     stage: 'F',
@@ -1809,7 +2247,6 @@
             const banner = document.getElementById('champion-banner');
             banner.classList.add('hidden');
 
-            // Si es Liga sin playoffs, mostrar directo al líder
             if (state.format === 'LEAGUE' && state.leagueQualifiers === 0) {
                 const table = calculateGroupStandings(state.groups[0]);
                 if (table.length > 0 && table[0].pj > 0) {
@@ -1833,7 +2270,6 @@
                 return;
             }
 
-            // Verificar si hay campeón en la final
             const finalMatch = state.knockoutMatches.find(m => m.stage === 'F');
             if (finalMatch && finalMatch.played && finalMatch.winnerId) {
                 const champ = getTeam(finalMatch.winnerId);
@@ -1868,6 +2304,8 @@
             const home = getTeam(m.homeId);
             const away = getTeam(m.awayId);
             const ready = home && away;
+            const homePos = home ? getTeamPosition(home.id) : null;
+            const awayPos = away ? getTeamPosition(away.id) : null;
 
             return `
                 <div onclick="${ready ? `openMatchModal('${m.id}', true)` : ''}" class="${ready ? 'cursor-pointer hover:border-[#00b4d8]' : 'opacity-75'} bg-white rounded-2xl border-2 ${m.stage === 'F' ? 'border-[#d4af37] shadow-lg' : 'border-slate-200 shadow-sm'} p-4 transition space-y-3">
@@ -1878,10 +2316,11 @@
 
                     <!-- Equipo 1 -->
                     <div class="flex items-center justify-between p-2.5 rounded-xl ${m.winnerId && m.winnerId === m.homeId ? 'bg-[#00e676]/15 border border-[#00e676]' : 'bg-slate-50'}">
-                        <div class="flex items-center space-x-2.5">
+                        <div class="flex items-center space-x-2">
                             ${home ? `
                                 <span style="background-color:${home.colorBg}; color:${home.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded w-10 text-center">${home.code}</span>
                                 <span class="font-sport text-xl font-extrabold text-slate-950">${home.name}</span>
+                                ${homePos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${homePos}°</span>` : ''}
                             ` : `<span class="text-xs text-slate-400 italic">A definir...</span>`}
                         </div>
                         <span class="font-sport text-2xl font-black text-slate-950">${m.played ? m.homeScore : '-'}</span>
@@ -1889,10 +2328,11 @@
 
                     <!-- Equipo 2 -->
                     <div class="flex items-center justify-between p-2.5 rounded-xl ${m.winnerId && m.winnerId === m.awayId ? 'bg-[#00e676]/15 border border-[#00e676]' : 'bg-slate-50'}">
-                        <div class="flex items-center space-x-2.5">
+                        <div class="flex items-center space-x-2">
                             ${away ? `
                                 <span style="background-color:${away.colorBg}; color:${away.colorText}" class="font-sport text-sm font-extrabold px-2 py-0.5 rounded w-10 text-center">${away.code}</span>
                                 <span class="font-sport text-xl font-extrabold text-slate-950">${away.name}</span>
+                                ${awayPos ? `<span class="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">${awayPos}°</span>` : ''}
                             ` : `<span class="text-xs text-slate-400 italic">A definir...</span>`}
                         </div>
                         <span class="font-sport text-2xl font-black text-slate-950">${m.played ? m.awayScore : '-'}</span>
@@ -1921,6 +2361,7 @@
             state.matches = [];
             state.knockoutMatches = [];
             state.groups = [];
+            selectedRoundFilter = 'ALL';
             saveState();
 
             closeResetModal();
