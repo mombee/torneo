@@ -192,6 +192,274 @@
             background-color: rgba(212, 175, 55, 0.22) !important;
             color: #fde047 !important;
         }
+
+        /* ==========================================================================
+           REDISEÑO "MUNDIAL 2026" — identidad vibrante, bloques de color,
+           formas geométricas, bordes gruesos y tipografía condensada pesada
+           ========================================================================== */
+        :root {
+            --wc-black: #0b0b0f;
+            --wc-red: #ff2d4b;
+            --wc-orange: #ff8a00;
+            --wc-yellow: #ffd60a;
+            --wc-green: #00d66b;
+            --wc-blue: #0a84ff;
+            --wc-cyan: #00c2e0;
+            --wc-purple: #7c3aed;
+            --wc-pink: #ff4fa3;
+            --wc-paper: #fbf8f1;
+        }
+
+        body {
+            background-color: var(--wc-paper);
+            background-image:
+                radial-gradient(circle at 8% 12%, rgba(255, 214, 10, 0.55) 0, rgba(255, 214, 10, 0.55) 90px, transparent 91px),
+                radial-gradient(circle at 94% 20%, rgba(255, 79, 163, 0.40) 0, rgba(255, 79, 163, 0.40) 120px, transparent 121px),
+                radial-gradient(circle at 90% 88%, rgba(0, 214, 107, 0.40) 0, rgba(0, 214, 107, 0.40) 150px, transparent 151px),
+                radial-gradient(circle at 4% 82%, rgba(10, 132, 255, 0.35) 0, rgba(10, 132, 255, 0.35) 110px, transparent 111px),
+                radial-gradient(rgba(11, 11, 15, 0.08) 1.2px, transparent 1.4px);
+            background-size: auto, auto, auto, auto, 22px 22px;
+            background-attachment: fixed;
+            color: var(--wc-black);
+        }
+
+        .font-sport {
+            font-family: 'Barlow Condensed', sans-serif;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        /* ---------- ENCABEZADO: bloque negro con formas de color ---------- */
+        .pitch-header {
+            background-color: var(--wc-black);
+            background-image:
+                radial-gradient(circle at 6% 130%, var(--wc-pink) 0, var(--wc-pink) 70px, transparent 71px),
+                radial-gradient(circle at 30% -40%, var(--wc-yellow) 0, var(--wc-yellow) 80px, transparent 81px),
+                radial-gradient(circle at 68% 160%, var(--wc-blue) 0, var(--wc-blue) 90px, transparent 91px),
+                radial-gradient(circle at 96% -30%, var(--wc-green) 0, var(--wc-green) 85px, transparent 86px),
+                repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 14px);
+        }
+        .pitch-header > div:first-child {
+            position: relative;
+            z-index: 1;
+        }
+        .pitch-header h1 span {
+            background-image: linear-gradient(90deg, #ffd60a 0%, #ff8a00 25%, #ff4fa3 50%, #7c3aed 72%, #00c2e0 100%) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent;
+            font-style: italic;
+            font-size: 1.15em;
+            filter: drop-shadow(2px 2px 0 rgba(255,255,255,0.12));
+        }
+
+        /* Cinta de bloques de color (7 colores) */
+        .wc26-ribbon {
+            height: 8px;
+            background: linear-gradient(90deg,
+                var(--wc-red) 0 14.28%,
+                var(--wc-orange) 14.28% 28.56%,
+                var(--wc-yellow) 28.56% 42.84%,
+                var(--wc-green) 42.84% 57.12%,
+                var(--wc-cyan) 57.12% 71.4%,
+                var(--wc-blue) 71.4% 85.68%,
+                var(--wc-purple) 85.68% 100%);
+        }
+
+        /* ---------- TARJETAS / PANELES: bordes gruesos + sombra sólida ---------- */
+        .rounded-2xl.shadow-md,
+        .rounded-2xl.shadow-sm {
+            border: 2.5px solid var(--wc-black) !important;
+            border-radius: 1.4rem !important;
+            box-shadow: 6px 6px 0 var(--wc-black) !important;
+        }
+        /* Cada panel principal rota un color de sombra distinto */
+        #setup-view > div:first-child > .bg-white:nth-child(1) { box-shadow: 6px 6px 0 var(--wc-pink) !important; }
+        #setup-view > div:first-child > .bg-white:nth-child(2) { box-shadow: 6px 6px 0 var(--wc-yellow) !important; }
+        #setup-view > div:last-child .bg-white { box-shadow: 6px 6px 0 var(--wc-cyan) !important; }
+        #tab-stats .lg\:col-span-2 { box-shadow: 6px 6px 0 var(--wc-green) !important; }
+        #tab-stats .grid > .bg-white:not(.lg\:col-span-2) { box-shadow: 6px 6px 0 var(--wc-purple) !important; }
+
+        /* Cabeceras de panel: negro con franja multicolor y esquina de color */
+        .wc26-panel-header {
+            background: var(--wc-black);
+            background-image: linear-gradient(135deg, transparent 0 calc(100% - 70px), rgba(255,214,10,.95) calc(100% - 70px) calc(100% - 35px), rgba(255,79,163,.95) calc(100% - 35px) 100%);
+            border-bottom: 5px solid transparent;
+            border-image: linear-gradient(90deg, var(--wc-red), var(--wc-orange), var(--wc-yellow), var(--wc-green), var(--wc-cyan), var(--wc-blue), var(--wc-purple)) 1;
+        }
+
+        /* ---------- BOTONES ---------- */
+        .wc26-cta-btn {
+            background: linear-gradient(90deg, var(--wc-pink) 0%, var(--wc-red) 55%, var(--wc-orange) 100%);
+            color: #fff;
+            border: 2.5px solid var(--wc-black);
+            box-shadow: 4px 4px 0 var(--wc-black);
+            transition: transform .12s ease, box-shadow .12s ease;
+        }
+        .wc26-cta-btn:hover {
+            background: linear-gradient(90deg, #ff6bb5 0%, #ff4560 55%, #ff9f1a 100%);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--wc-black);
+        }
+        .wc26-cta-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 var(--wc-black);
+        }
+        button[type="submit"].bg-\[\#090a0f\] {
+            border: 2.5px solid var(--wc-black) !important;
+            border-bottom-color: var(--wc-yellow) !important;
+            box-shadow: 4px 4px 0 var(--wc-yellow);
+        }
+        .nav-btn.bg-\[\#00e676\] {
+            background: var(--wc-yellow) !important;
+            color: var(--wc-black) !important;
+        }
+        .nav-btn-m.bg-\[\#00e676\] {
+            background: var(--wc-yellow) !important;
+            color: var(--wc-black) !important;
+        }
+        #main-nav {
+            border-radius: 999px;
+        }
+        #main-nav .nav-btn { border-radius: 999px; }
+
+        /* ---------- Inputs y selects ---------- */
+        input[type="text"], select {
+            border: 2px solid var(--wc-black) !important;
+            border-radius: .75rem !important;
+            background-color: #fff;
+        }
+        input[type="text"]:focus, select:focus {
+            box-shadow: 3px 3px 0 var(--wc-cyan) !important;
+            outline: none !important;
+        }
+
+        /* ---------- Selector de formato (Liga / Copa) ---------- */
+        input[name="format-type"] + div {
+            border: 2.5px solid var(--wc-black) !important;
+            border-radius: 1rem !important;
+        }
+        input[name="format-type"]:checked + div {
+            background: var(--wc-purple) !important;
+            color: #fff;
+            box-shadow: 4px 4px 0 var(--wc-yellow);
+        }
+
+        /* ---------- Chips y marcadores ---------- */
+        .rounded-xl.cursor-pointer,
+        #teams-grid > div {
+            border-radius: 1.1rem;
+        }
+        #teams-grid > div {
+            border: 2.5px solid var(--wc-black) !important;
+            box-shadow: 4px 4px 0 var(--wc-black);
+            background: #fff !important;
+        }
+        #teams-grid > div:nth-child(5n+1) { box-shadow: 4px 4px 0 var(--wc-red); }
+        #teams-grid > div:nth-child(5n+2) { box-shadow: 4px 4px 0 var(--wc-yellow); }
+        #teams-grid > div:nth-child(5n+3) { box-shadow: 4px 4px 0 var(--wc-green); }
+        #teams-grid > div:nth-child(5n+4) { box-shadow: 4px 4px 0 var(--wc-blue); }
+        #teams-grid > div:nth-child(5n+5) { box-shadow: 4px 4px 0 var(--wc-purple); }
+
+        #matches-container .cursor-pointer {
+            border: 2.5px solid var(--wc-black) !important;
+            box-shadow: 3px 3px 0 rgba(11, 11, 15, 0.9);
+            transition: transform .12s ease, box-shadow .12s ease;
+        }
+        #matches-container .cursor-pointer:hover,
+        #knockout-container .cursor-pointer:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--wc-cyan);
+            border-color: var(--wc-black) !important;
+        }
+        #knockout-container .cursor-pointer,
+        #knockout-container [class*="border-2"] {
+            border-color: var(--wc-black) !important;
+            box-shadow: 4px 4px 0 var(--wc-black);
+        }
+        #knockout-container [class*="border-\[\#d4af37\]"] {
+            border-color: var(--wc-black) !important;
+            box-shadow: 6px 6px 0 var(--wc-yellow);
+        }
+
+        /* Cabecera de cada Fecha dentro del fixture */
+        #matches-container .bg-slate-900 {
+            background: var(--wc-black) !important;
+            border-left: 8px solid var(--wc-orange) !important;
+            border-radius: .9rem !important;
+        }
+        #matches-container .space-y-3:nth-of-type(odd) .bg-slate-900 { border-left-color: var(--wc-pink) !important; }
+
+        /* Tablas de posiciones */
+        #standings-container table thead tr,
+        #tab-stats table thead tr {
+            background: var(--wc-yellow) !important;
+            color: var(--wc-black) !important;
+            border-bottom: 3px solid var(--wc-black) !important;
+        }
+        #standings-container tbody tr:hover { background: rgba(255, 214, 10, 0.25) !important; }
+
+        /* Banner de campeón */
+        #champion-banner {
+            border: 3px solid var(--wc-black) !important;
+            border-radius: 1.6rem !important;
+            box-shadow: 8px 8px 0 var(--wc-yellow);
+        }
+
+        /* Toast */
+        #toast {
+            background: var(--wc-black);
+            border: 2.5px solid var(--wc-black);
+            border-left: 8px solid var(--wc-yellow);
+            box-shadow: 4px 4px 0 var(--wc-pink);
+        }
+
+        /* Modales */
+        #match-modal > div,
+        #team-history-modal > div,
+        #reset-modal > div {
+            border: 3px solid var(--wc-black) !important;
+            border-radius: 1.6rem !important;
+            box-shadow: 10px 10px 0 var(--wc-yellow);
+        }
+        #team-history-modal > div { box-shadow: 10px 10px 0 var(--wc-pink); }
+        #reset-modal > div { box-shadow: 10px 10px 0 var(--wc-red); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar-track { background: var(--wc-paper); }
+        ::-webkit-scrollbar-thumb { background: var(--wc-black); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--wc-pink); }
+
+        /* ---------- Ajustes MODO NOCTURNO sobre el nuevo estilo ---------- */
+        body.dark-mode {
+            background-color: #0b0b12;
+            background-image:
+                radial-gradient(circle at 8% 12%, rgba(255, 214, 10, 0.16) 0, rgba(255, 214, 10, 0.16) 90px, transparent 91px),
+                radial-gradient(circle at 94% 20%, rgba(255, 79, 163, 0.18) 0, rgba(255, 79, 163, 0.18) 120px, transparent 121px),
+                radial-gradient(circle at 90% 88%, rgba(0, 214, 107, 0.16) 0, rgba(0, 214, 107, 0.16) 150px, transparent 151px),
+                radial-gradient(circle at 4% 82%, rgba(10, 132, 255, 0.18) 0, rgba(10, 132, 255, 0.18) 110px, transparent 111px),
+                radial-gradient(rgba(255, 255, 255, 0.05) 1.2px, transparent 1.4px);
+            background-size: auto, auto, auto, auto, 22px 22px;
+        }
+        body.dark-mode .rounded-2xl.shadow-md,
+        body.dark-mode .rounded-2xl.shadow-sm {
+            border-color: #f8fafc !important;
+        }
+        body.dark-mode input[type="text"],
+        body.dark-mode select {
+            border-color: #475569 !important;
+        }
+        body.dark-mode #teams-grid > div { background: #111420 !important; border-color: #f8fafc !important; }
+        body.dark-mode #matches-container .cursor-pointer { border-color: #475569 !important; }
+        body.dark-mode #standings-container table thead tr,
+        body.dark-mode #tab-stats table thead tr {
+            background: #2a2410 !important;
+            color: var(--wc-yellow) !important;
+        }
+        body.dark-mode #match-modal > div,
+        body.dark-mode #team-history-modal > div,
+        body.dark-mode #reset-modal > div { border-color: #f8fafc !important; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
