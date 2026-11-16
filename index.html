@@ -76,6 +76,122 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #ff1e42;
         }
+
+        /* ==========================================
+           MODO NOCTURNO (DARK MODE)
+           ========================================== */
+        body.dark-mode {
+            background-color: #06070a;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(255, 30, 66, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 100% 0%, rgba(0, 180, 216, 0.14) 0%, transparent 45%),
+                radial-gradient(circle at 50% 100%, rgba(0, 230, 118, 0.1) 0%, transparent 55%);
+            color: #f1f5f9;
+        }
+        body.dark-mode::-webkit-scrollbar-track {
+            background: #0d0f17;
+        }
+        body.dark-mode::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        body.dark-mode::-webkit-scrollbar-thumb:hover {
+            background: #00e676;
+        }
+
+        /* Superficies y tarjetas */
+        body.dark-mode .bg-white {
+            background-color: #111420 !important;
+            color: #f1f5f9;
+        }
+        body.dark-mode .bg-slate-50,
+        body.dark-mode .bg-slate-50\/50,
+        body.dark-mode .bg-slate-50\/70 {
+            background-color: #171b2b !important;
+        }
+        body.dark-mode .bg-slate-100 {
+            background-color: #1c2135 !important;
+        }
+        body.dark-mode .bg-slate-200 {
+            background-color: #272e47 !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode .hover\:bg-slate-50:hover,
+        body.dark-mode .hover\:bg-slate-200:hover,
+        body.dark-mode .hover\:bg-white:hover {
+            background-color: #1e243b !important;
+        }
+
+        /* Bordes */
+        body.dark-mode .border-slate-100,
+        body.dark-mode .border-slate-200,
+        body.dark-mode .border-slate-200\/80,
+        body.dark-mode .border-slate-200\/90,
+        body.dark-mode .border-slate-300 {
+            border-color: #252b42 !important;
+        }
+        body.dark-mode .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
+            border-color: #20253a !important;
+        }
+
+        /* Textos */
+        body.dark-mode .text-slate-950,
+        body.dark-mode .text-slate-900,
+        body.dark-mode .text-slate-800 {
+            color: #f8fafc !important;
+        }
+        body.dark-mode .text-slate-700,
+        body.dark-mode .text-slate-600 {
+            color: #cbd5e1 !important;
+        }
+        body.dark-mode .text-slate-500,
+        body.dark-mode .text-slate-400 {
+            color: #94a3b8 !important;
+        }
+        body.dark-mode .text-emerald-700 {
+            color: #00e676 !important;
+        }
+        body.dark-mode .text-emerald-400 {
+            color: #00e676 !important;
+        }
+
+        /* Inputs y Selects */
+        body.dark-mode input[type="text"],
+        body.dark-mode select {
+            background-color: #0b0d14 !important;
+            color: #f8fafc !important;
+            border-color: #2d3552 !important;
+        }
+        body.dark-mode input::placeholder {
+            color: #64748b !important;
+        }
+
+        /* Ajustes específicos de contraste en modo nocturno */
+        body.dark-mode .bg-\[\#00e676\] {
+            color: #090a0f !important;
+        }
+        body.dark-mode .bg-\[\#00e676\]\/20 {
+            background-color: rgba(0, 230, 118, 0.14) !important;
+            color: #00e676 !important;
+        }
+        body.dark-mode .bg-\[\#00b4d8\]\/15 {
+            background-color: rgba(0, 180, 216, 0.2) !important;
+            color: #38bdf8 !important;
+        }
+        body.dark-mode .bg-amber-50 {
+            background-color: rgba(245, 158, 11, 0.14) !important;
+            border-color: rgba(245, 158, 11, 0.4) !important;
+        }
+        body.dark-mode .text-amber-900 {
+            color: #fcd34d !important;
+        }
+        body.dark-mode .bg-amber-100 {
+            background-color: rgba(245, 158, 11, 0.2) !important;
+            color: #fcd34d !important;
+        }
+        body.dark-mode .bg-\[\#d4af37\]\/30 {
+            background-color: rgba(212, 175, 55, 0.22) !important;
+            color: #fde047 !important;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -111,6 +227,17 @@
             </nav>
 
             <div class="flex items-center space-x-2">
+                <!-- Botón Modo Nocturno -->
+                <button onclick="toggleDarkMode()" id="btn-theme-toggle" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition flex items-center justify-center" title="Alternar Modo Nocturno">
+                    <!-- Icono Luna (Modo Nocturno) -->
+                    <svg id="icon-moon" class="w-4 h-4 text-[#00b4d8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <!-- Icono Sol (Modo Claro) -->
+                    <svg id="icon-sun" class="w-4 h-4 text-amber-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
                 <button onclick="loadDemoData()" id="btn-demo" class="text-xs bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-lg border border-white/20 font-bold uppercase tracking-wider transition">
                     Cargar 10 Equipos Demo
                 </button>
@@ -722,7 +849,33 @@
         /* ==========================================================================
            INICIALIZACIÓN Y UTILIDADES
            ========================================================================== */
+        function applyTheme(isDark) {
+            const moon = document.getElementById('icon-moon');
+            const sun = document.getElementById('icon-sun');
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                if (moon) moon.classList.add('hidden');
+                if (sun) sun.classList.remove('hidden');
+            } else {
+                document.body.classList.remove('dark-mode');
+                if (moon) moon.classList.remove('hidden');
+                if (sun) sun.classList.add('hidden');
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDark = !document.body.classList.contains('dark-mode');
+            applyTheme(isDark);
+            localStorage.setItem('torneo3v3_dark_mode', isDark ? '1' : '0');
+            showToast(isDark ? "Modo nocturno activado" : "Modo claro activado");
+        }
+
         window.onload = function() {
+            const savedTheme = localStorage.getItem('torneo3v3_dark_mode');
+            if (savedTheme === '1') {
+                applyTheme(true);
+            }
+
             const saved = localStorage.getItem('torneo3v3_state');
             if (saved) {
                 try {
