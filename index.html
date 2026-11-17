@@ -522,6 +522,105 @@
         body.dark-mode .stat-chip-sub { color: #94a3b8; }
         body.dark-mode .btn-ghost { background: #111420; color: #f8fafc; border-color: #f8fafc; box-shadow: 3px 3px 0 #f8fafc; }
         body.dark-mode .form-dot { border-color: #f8fafc; }
+
+        /* ---------- Menú de inscripción ---------- */
+        .reg-step {
+            display: flex; align-items: center; gap: .5rem;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800; font-style: italic; text-transform: uppercase;
+            letter-spacing: .04em; font-size: 1.2rem; line-height: 1;
+        }
+        .reg-step-num {
+            width: 1.45rem; height: 1.45rem; border-radius: 999px;
+            background: var(--wc-black); color: var(--wc-yellow);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: .95rem; font-style: normal;
+        }
+        .reg-country-grid {
+            display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem;
+            max-height: 15.5rem; overflow-y: auto;
+            margin-top: .65rem; padding: .2rem .35rem .45rem .15rem;
+        }
+        @media (max-width: 440px) {
+            .reg-country-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        .country-tile {
+            display: flex; flex-direction: column; align-items: center; gap: .35rem;
+            padding: .55rem .25rem .45rem; min-width: 0;
+            background: #fff; color: var(--wc-black);
+            border: 2px solid var(--wc-black); border-radius: .8rem;
+            cursor: pointer; text-align: center;
+            transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+        }
+        .country-tile > span:not([class*="object"]) {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800; font-style: italic; text-transform: uppercase;
+            font-size: .85rem; line-height: 1; max-width: 100%;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .country-tile:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--wc-cyan); }
+        .country-tile.is-selected { background: var(--wc-yellow); box-shadow: 3px 3px 0 var(--wc-black); }
+        .country-tile-custom { border-style: dashed; }
+        .country-tile-custom b { font-size: 1.4rem; line-height: 1.45rem; font-weight: 900; }
+
+        .reg-preview {
+            display: flex; align-items: center; gap: .8rem; min-height: 4.6rem;
+            padding: .65rem .9rem;
+            background: var(--wc-paper);
+            border: 2.5px solid var(--wc-black); border-left: 10px solid var(--team, var(--wc-black));
+            border-radius: 1rem;
+        }
+        .reg-preview-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900; font-style: italic; text-transform: uppercase;
+            font-size: 1.7rem; line-height: 1;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .reg-preview-meta {
+            display: flex; align-items: center; gap: .45rem; margin-top: .3rem;
+            font-size: .75rem; font-weight: 800; letter-spacing: .1em; color: #64748b;
+        }
+        .reg-preview-empty { font-size: .8rem; font-weight: 600; color: #64748b; }
+
+        .reg-squad { display: flex; flex-direction: column; gap: .6rem; margin-top: .7rem; }
+        .reg-squad-row { display: flex; align-items: center; gap: .7rem; }
+        .reg-shirt {
+            position: relative; flex: none; width: 2.4rem; height: 2.4rem;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--wc-black); color: #fff;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900; font-style: italic; font-size: 1.4rem;
+            border-radius: .6rem;
+        }
+        .reg-cap {
+            position: absolute; right: -6px; top: -7px;
+            width: 1.05rem; height: 1.05rem; border-radius: 999px;
+            background: var(--wc-yellow); color: var(--wc-black);
+            border: 1.5px solid var(--wc-black);
+            font-family: 'Plus Jakarta Sans', sans-serif; font-style: normal;
+            font-size: .6rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+        input.reg-squad-input[type="text"] {
+            flex: 1; min-width: 0; padding: .45rem .15rem;
+            font-size: .95rem; font-weight: 700;
+            background: transparent !important;
+            border: 0 !important; border-bottom: 2px solid var(--wc-black) !important;
+            border-radius: 0 !important;
+        }
+        input.reg-squad-input[type="text"]:focus {
+            border-bottom-color: var(--wc-cyan) !important;
+            box-shadow: none !important;
+        }
+        body.dark-mode .country-tile { background: #111420; color: #f8fafc; border-color: #475569; }
+        body.dark-mode .country-tile.is-selected { background: #2a2410; border-color: var(--wc-yellow); box-shadow: 3px 3px 0 var(--wc-yellow); }
+        body.dark-mode .reg-preview { background: #0f121c; border-color: #f8fafc; border-left-color: var(--team, #f8fafc); }
+        body.dark-mode .reg-step-num { background: var(--wc-yellow); color: #0b0b0f; }
+        body.dark-mode .reg-shirt { background: #f8fafc; color: #0b0b0f; }
+        body.dark-mode input.reg-squad-input[type="text"] {
+            background: transparent !important;
+            border-bottom: 2px solid #f8fafc !important;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -611,65 +710,60 @@
             <!-- Columna Izquierda: Formulario de Equipo y Reglas -->
             <div class="lg:col-span-5 space-y-6">
                 
-                <!-- Panel Agregar Equipo -->
+                <!-- Panel Inscribir Selección -->
                 <div class="bg-white rounded-2xl shadow-md border border-slate-200/90 overflow-hidden">
                     <div class="wc26-panel-header px-6 py-4 flex justify-between items-center">
                         <h2 class="font-sport text-2xl font-extrabold text-white uppercase tracking-wider">Inscribir Selección</h2>
                         <span class="text-xs bg-[#00e676] text-slate-950 font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider">3 Jugadores</span>
                     </div>
-                    <form id="team-form" onsubmit="addTeam(event)" class="p-6 space-y-4">
+                    <form id="team-form" onsubmit="addTeam(event)" class="p-5 space-y-5">
+                        <input type="hidden" id="country-select" value="">
+
+                        <!-- 1. País -->
                         <div>
-                            <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-1">País / Federación</label>
-                            <div class="flex space-x-2">
-                                <select id="country-select" onchange="toggleCustomCountry()" class="w-full rounded-lg border-slate-300 border px-3 py-2.5 text-sm focus:ring-2 focus:ring-[#00b4d8] focus:border-[#00b4d8] outline-none bg-slate-50 font-semibold">
-                                    <option value="ARG|Argentina|#38bdf8|#ffffff">Argentina (ARG)</option>
-                                    <option value="BRA|Brasil|#facc15|#15803d">Brasil (BRA)</option>
-                                    <option value="URU|Uruguay|#60a5fa|#0f172a">Uruguay (URU)</option>
-                                    <option value="FRA|Francia|#1e3a8a|#ef4444">Francia (FRA)</option>
-                                    <option value="ESP|España|#dc2626|#facc15">España (ESP)</option>
-                                    <option value="GER|Alemania|#171717|#d97706">Alemania (GER)</option>
-                                    <option value="ITA|Italia|#2563eb|#ffffff">Italia (ITA)</option>
-                                    <option value="ENG|Inglaterra|#f8fafc|#dc2626">Inglaterra (ENG)</option>
-                                    <option value="POR|Portugal|#991b1b|#15803d">Portugal (POR)</option>
-                                    <option value="NED|Países Bajos|#f97316|#171717">Países Bajos (NED)</option>
-                                    <option value="COL|Colombia|#fde047|#1d4ed8">Colombia (COL)</option>
-                                    <option value="CRO|Croacia|#ef4444|#ffffff">Croacia (CRO)</option>
-                                    <option value="MAR|Marruecos|#b91c1c|#15803d">Marruecos (MAR)</option>
-                                    <option value="JPN|Japón|#1e40af|#ffffff">Japón (JPN)</option>
-                                    <option value="MEX|México|#15803d|#b91c1c">México (MEX)</option>
-                                    <option value="USA|Estados Unidos|#1e3a8a|#dc2626">Estados Unidos (USA)</option>
-                                    <option value="CAN|Canadá|#dc2626|#ffffff">Canadá (CAN)</option>
-                                    <option value="CHL|Chile|#dc2626|#1d4ed8">Chile (CHL)</option>
-                                    <option value="CUSTOM">-- Otro País (Personalizado) --</option>
-                                </select>
+                            <div class="reg-step"><span class="reg-step-num">1</span><span>País</span></div>
+                            <input type="text" id="country-search" oninput="renderCountryGrid()" placeholder="Buscar país o sigla" autocomplete="off" class="w-full px-3 py-2 text-sm mt-2">
+                            <div id="country-grid" class="reg-country-grid"></div>
+
+                            <!-- País personalizado -->
+                            <div id="custom-country-box" class="hidden grid grid-cols-2 gap-2 pt-3">
+                                <div class="col-span-2">
+                                    <input type="text" id="custom-country-name" oninput="renderRegPreview()" placeholder="Nombre del país" class="w-full px-3 py-2 text-sm">
+                                </div>
+                                <div>
+                                    <input type="text" id="custom-country-code" oninput="renderRegPreview()" placeholder="Sigla (ej: PER)" maxlength="3" class="w-full px-3 py-2 text-sm uppercase">
+                                </div>
+                                <div>
+                                    <input type="text" id="custom-country-flag" oninput="renderRegPreview()" placeholder="Bandera (ej: pe)" maxlength="7" class="w-full px-3 py-2 text-sm lowercase">
+                                </div>
+                                <p class="col-span-2 text-[11px] text-slate-500 leading-snug">El código de bandera son 2 letras del país (pe, py, ve…). Si lo dejás vacío se muestra la sigla.</p>
                             </div>
                         </div>
 
-                        <!-- Input País Personalizado -->
-                        <div id="custom-country-box" class="hidden grid grid-cols-3 gap-2 pt-1">
-                            <div class="col-span-2">
-                                <input type="text" id="custom-country-name" placeholder="Nombre del País" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm">
-                            </div>
-                            <div>
-                                <input type="text" id="custom-country-code" placeholder="Sigla (Ej: PER)" maxlength="3" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm uppercase">
-                            </div>
-                        </div>
+                        <!-- Selección elegida -->
+                        <div id="reg-preview" class="reg-preview"></div>
 
-                        <div class="pt-2 border-t border-slate-100 space-y-3">
-                            <label class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider">Convocados (3 Integrantes)</label>
-                            <div>
-                                <input type="text" id="player1" required placeholder="Jugador 1 (Capitán)" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-[#00b4d8] outline-none">
-                            </div>
-                            <div>
-                                <input type="text" id="player2" required placeholder="Jugador 2" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-[#00b4d8] outline-none">
-                            </div>
-                            <div>
-                                <input type="text" id="player3" required placeholder="Jugador 3" class="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-[#00b4d8] outline-none">
+                        <!-- 2. Plantel -->
+                        <div>
+                            <div class="reg-step"><span class="reg-step-num">2</span><span>Plantel</span></div>
+                            <div class="reg-squad">
+                                <div class="reg-squad-row">
+                                    <span class="reg-shirt">1<span class="reg-cap" title="Capitán">C</span></span>
+                                    <input type="text" id="player1" required placeholder="Capitán" autocomplete="off" class="reg-squad-input">
+                                </div>
+                                <div class="reg-squad-row">
+                                    <span class="reg-shirt">2</span>
+                                    <input type="text" id="player2" required placeholder="Jugador 2" autocomplete="off" class="reg-squad-input">
+                                </div>
+                                <div class="reg-squad-row">
+                                    <span class="reg-shirt">3</span>
+                                    <input type="text" id="player3" required placeholder="Jugador 3" autocomplete="off" class="reg-squad-input">
+                                </div>
                             </div>
                         </div>
 
                         <button type="submit" class="w-full bg-[#090a0f] hover:bg-slate-800 text-white font-sport text-xl font-extrabold py-2.5 px-4 rounded-xl shadow transition duration-150 uppercase tracking-widest border-b-2 border-[#00e676]">
-                            + Registrar Selección
+                            Inscribir selección
                         </button>
                     </form>
                 </div>
@@ -1542,10 +1636,207 @@
             </span>`;
         }
 
+        /* ---------- Catálogo de selecciones (nombre, sigla, bandera y colores) ---------- */
+        const COUNTRIES = [
+            // Las primeras 18 mantienen los colores originales
+            { code: 'ARG', name: 'Argentina', iso: 'ar', bg: '#38bdf8', text: '#ffffff' },
+            { code: 'BRA', name: 'Brasil', iso: 'br', bg: '#facc15', text: '#15803d' },
+            { code: 'URU', name: 'Uruguay', iso: 'uy', bg: '#60a5fa', text: '#0f172a' },
+            { code: 'FRA', name: 'Francia', iso: 'fr', bg: '#1e3a8a', text: '#ef4444' },
+            { code: 'ESP', name: 'España', iso: 'es', bg: '#dc2626', text: '#facc15' },
+            { code: 'GER', name: 'Alemania', iso: 'de', bg: '#171717', text: '#d97706' },
+            { code: 'ITA', name: 'Italia', iso: 'it', bg: '#2563eb', text: '#ffffff' },
+            { code: 'ENG', name: 'Inglaterra', iso: 'gb-eng', bg: '#f8fafc', text: '#dc2626' },
+            { code: 'POR', name: 'Portugal', iso: 'pt', bg: '#991b1b', text: '#15803d' },
+            { code: 'NED', name: 'Países Bajos', iso: 'nl', bg: '#f97316', text: '#171717' },
+            { code: 'COL', name: 'Colombia', iso: 'co', bg: '#fde047', text: '#1d4ed8' },
+            { code: 'CRO', name: 'Croacia', iso: 'hr', bg: '#ef4444', text: '#ffffff' },
+            { code: 'MAR', name: 'Marruecos', iso: 'ma', bg: '#b91c1c', text: '#15803d' },
+            { code: 'JPN', name: 'Japón', iso: 'jp', bg: '#1e40af', text: '#ffffff' },
+            { code: 'MEX', name: 'México', iso: 'mx', bg: '#15803d', text: '#b91c1c' },
+            { code: 'USA', name: 'Estados Unidos', iso: 'us', bg: '#1e3a8a', text: '#dc2626' },
+            { code: 'CAN', name: 'Canadá', iso: 'ca', bg: '#dc2626', text: '#ffffff' },
+            { code: 'CHL', name: 'Chile', iso: 'cl', bg: '#dc2626', text: '#1d4ed8' },
+            { code: 'AYB', name: 'Antigua y Barbuda', iso: 'ag', bg: '#334155', text: '#ffffff' },
+            // Europa
+            { code: 'BEL', name: 'Bélgica', iso: 'be', bg: '#dc2626', text: '#facc15' },
+            { code: 'SUI', name: 'Suiza', iso: 'ch', bg: '#dc2626', text: '#ffffff' },
+            { code: 'DEN', name: 'Dinamarca', iso: 'dk', bg: '#dc2626', text: '#ffffff' },
+            { code: 'SWE', name: 'Suecia', iso: 'se', bg: '#facc15', text: '#1d4ed8' },
+            { code: 'NOR', name: 'Noruega', iso: 'no', bg: '#dc2626', text: '#1e3a8a' },
+            { code: 'POL', name: 'Polonia', iso: 'pl', bg: '#f8fafc', text: '#dc2626' },
+            { code: 'AUT', name: 'Austria', iso: 'at', bg: '#dc2626', text: '#ffffff' },
+            { code: 'SCO', name: 'Escocia', iso: 'gb-sct', bg: '#1e3a8a', text: '#ffffff' },
+            { code: 'WAL', name: 'Gales', iso: 'gb-wls', bg: '#dc2626', text: '#ffffff' },
+            { code: 'TUR', name: 'Turquía', iso: 'tr', bg: '#dc2626', text: '#ffffff' },
+            { code: 'SRB', name: 'Serbia', iso: 'rs', bg: '#b91c1c', text: '#ffffff' },
+            { code: 'UKR', name: 'Ucrania', iso: 'ua', bg: '#facc15', text: '#1d4ed8' },
+            { code: 'CZE', name: 'Rep. Checa', iso: 'cz', bg: '#dc2626', text: '#ffffff' },
+            { code: 'HUN', name: 'Hungría', iso: 'hu', bg: '#dc2626', text: '#ffffff' },
+            { code: 'GRE', name: 'Grecia', iso: 'gr', bg: '#2563eb', text: '#ffffff' },
+            { code: 'IRL', name: 'Irlanda', iso: 'ie', bg: '#15803d', text: '#ffffff' },
+            // África
+            { code: 'SEN', name: 'Senegal', iso: 'sn', bg: '#15803d', text: '#facc15' },
+            { code: 'NGA', name: 'Nigeria', iso: 'ng', bg: '#15803d', text: '#ffffff' },
+            { code: 'EGY', name: 'Egipto', iso: 'eg', bg: '#dc2626', text: '#ffffff' },
+            { code: 'ALG', name: 'Argelia', iso: 'dz', bg: '#15803d', text: '#ffffff' },
+            { code: 'TUN', name: 'Túnez', iso: 'tn', bg: '#dc2626', text: '#ffffff' },
+            { code: 'CMR', name: 'Camerún', iso: 'cm', bg: '#15803d', text: '#facc15' },
+            { code: 'GHA', name: 'Ghana', iso: 'gh', bg: '#facc15', text: '#171717' },
+            { code: 'CIV', name: 'Costa de Marfil', iso: 'ci', bg: '#f97316', text: '#ffffff' },
+            { code: 'RSA', name: 'Sudáfrica', iso: 'za', bg: '#facc15', text: '#15803d' },
+            { code: 'CPV', name: 'Cabo Verde', iso: 'cv', bg: '#1d4ed8', text: '#ffffff' },
+            // Sudamérica
+            { code: 'PAR', name: 'Paraguay', iso: 'py', bg: '#dc2626', text: '#ffffff' },
+            { code: 'ECU', name: 'Ecuador', iso: 'ec', bg: '#facc15', text: '#1d4ed8' },
+            { code: 'PER', name: 'Perú', iso: 'pe', bg: '#f8fafc', text: '#dc2626' },
+            { code: 'BOL', name: 'Bolivia', iso: 'bo', bg: '#15803d', text: '#ffffff' },
+            { code: 'VEN', name: 'Venezuela', iso: 've', bg: '#7f1d1d', text: '#facc15' },
+            // Norte y Centroamérica / Caribe
+            { code: 'CRC', name: 'Costa Rica', iso: 'cr', bg: '#dc2626', text: '#ffffff' },
+            { code: 'PAN', name: 'Panamá', iso: 'pa', bg: '#dc2626', text: '#ffffff' },
+            { code: 'JAM', name: 'Jamaica', iso: 'jm', bg: '#facc15', text: '#171717' },
+            { code: 'HON', name: 'Honduras', iso: 'hn', bg: '#f8fafc', text: '#1d4ed8' },
+            { code: 'HAI', name: 'Haití', iso: 'ht', bg: '#1d4ed8', text: '#ffffff' },
+            { code: 'CUW', name: 'Curazao', iso: 'cw', bg: '#1e3a8a', text: '#facc15' },
+            // Asia y Oceanía
+            { code: 'KOR', name: 'Corea del Sur', iso: 'kr', bg: '#dc2626', text: '#ffffff' },
+            { code: 'IRN', name: 'Irán', iso: 'ir', bg: '#f8fafc', text: '#15803d' },
+            { code: 'AUS', name: 'Australia', iso: 'au', bg: '#facc15', text: '#15803d' },
+            { code: 'KSA', name: 'Arabia Saudita', iso: 'sa', bg: '#15803d', text: '#ffffff' },
+            { code: 'QAT', name: 'Qatar', iso: 'qa', bg: '#7f1d3a', text: '#ffffff' },
+            { code: 'UZB', name: 'Uzbekistán', iso: 'uz', bg: '#2563eb', text: '#ffffff' },
+            { code: 'JOR', name: 'Jordania', iso: 'jo', bg: '#dc2626', text: '#ffffff' },
+            { code: 'NZL', name: 'Nueva Zelanda', iso: 'nz', bg: '#171717', text: '#ffffff' },
+            { code: 'CHN', name: 'China', iso: 'cn', bg: '#dc2626', text: '#facc15' }
+        ];
+
+        const FLAG_ISO = {};
+        COUNTRIES.forEach(c => { FLAG_ISO[c.code] = c.iso; });
+
+        // Escudos de las selecciones que se suman (mismo origen que los anteriores).
+        // Si alguna imagen no carga, se muestra la sigla de respaldo.
+        const footyLogo = (slug) => `https://assets.footylogos.com/logos/${slug}/${slug}-logo-footylogos.svg`;
+        Object.entries({
+            BEL: 'belgium', SUI: 'switzerland', DEN: 'denmark', SWE: 'sweden', NOR: 'norway',
+            POL: 'poland', AUT: 'austria', SCO: 'scotland', WAL: 'wales', TUR: 'turkey',
+            SRB: 'serbia', UKR: 'ukraine', CZE: 'czech-republic', HUN: 'hungary', GRE: 'greece',
+            IRL: 'republic-of-ireland', SEN: 'senegal', NGA: 'nigeria', EGY: 'egypt', ALG: 'algeria',
+            TUN: 'tunisia', CMR: 'cameroon', GHA: 'ghana', CIV: 'ivory-coast', RSA: 'south-africa',
+            CPV: 'cape-verde', PAR: 'paraguay', ECU: 'ecuador', PER: 'peru', BOL: 'bolivia',
+            VEN: 'venezuela', CRC: 'costa-rica', PAN: 'panama', JAM: 'jamaica', HON: 'honduras',
+            HAI: 'haiti', CUW: 'curacao', KOR: 'south-korea', IRN: 'iran', AUS: 'australia',
+            KSA: 'saudi-arabia', QAT: 'qatar', UZB: 'uzbekistan', JOR: 'jordan', NZL: 'new-zealand',
+            CHN: 'china'
+        }).forEach(([code, slug]) => {
+            if (!FEDERATION_LOGOS[code]) FEDERATION_LOGOS[code] = footyLogo(`${slug}-national-team`);
+        });
+
+        function escHtml(str) {
+            return String(str).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+        }
+
+        // Bandera del país (no el escudo). Si no hay bandera disponible, muestra la sigla.
+        function flagMarkup(team, cls = 'w-6 h-4') {
+            const code = String(team.code || '').replace(/[^A-Z0-9]/gi, '').slice(0, 3).toUpperCase();
+            const iso = String(team.flag || FLAG_ISO[team.code] || '').toLowerCase();
+            if (!/^[a-z]{2}(-[a-z]{2,3})?$/.test(iso)) {
+                return `<span class="font-sport text-xs font-bold">${code}</span>`;
+            }
+            return `<img src="https://flagcdn.com/w40/${iso}.png" srcset="https://flagcdn.com/w80/${iso}.png 2x" alt="Bandera de ${escHtml(team.name)}" title="${escHtml(team.name)}" class="${cls} object-cover rounded-[3px] border border-black/25 inline-block align-middle shrink-0" loading="lazy" onerror="this.replaceWith(document.createTextNode('${code}'))">`;
+        }
+
+        /* ---------- Selector de país del menú de inscripción ---------- */
+        let regSelectedCode = '';
+
+        function normalizeText(s) {
+            return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+        }
+
+        function renderCountryGrid() {
+            const grid = document.getElementById('country-grid');
+            if (!grid) return;
+            const q = normalizeText(document.getElementById('country-search').value.trim());
+            const list = COUNTRIES
+                .filter(c => !q || normalizeText(c.name).includes(q) || c.code.toLowerCase().includes(q))
+                .sort((a, b) => a.name.localeCompare(b.name, 'es'));
+            const scroll = grid.scrollTop;
+
+            grid.innerHTML = list.map(c => `
+                <button type="button" onclick="selectCountry('${c.code}')" title="${c.name}" class="country-tile ${regSelectedCode === c.code ? 'is-selected' : ''}">
+                    ${flagMarkup(c, 'w-9 h-6')}
+                    <span>${c.name}</span>
+                </button>
+            `).join('') + `
+                <button type="button" onclick="selectCountry('CUSTOM')" class="country-tile country-tile-custom ${regSelectedCode === 'CUSTOM' ? 'is-selected' : ''}">
+                    <b>+</b>
+                    <span>Otro país</span>
+                </button>
+            `;
+            grid.scrollTop = scroll;
+        }
+
+        function selectCountry(code) {
+            regSelectedCode = code;
+            const hidden = document.getElementById('country-select');
+            if (code === 'CUSTOM') {
+                hidden.value = 'CUSTOM';
+            } else {
+                const c = COUNTRIES.find(x => x.code === code);
+                hidden.value = c ? `${c.code}|${c.name}|${c.bg}|${c.text}` : '';
+            }
+            toggleCustomCountry();
+            renderCountryGrid();
+            renderRegPreview();
+        }
+
+        function renderRegPreview() {
+            const box = document.getElementById('reg-preview');
+            if (!box) return;
+            const sel = document.getElementById('country-select').value;
+
+            if (!sel) {
+                box.style.setProperty('--team', '#cbd5e1');
+                box.innerHTML = `<div class="reg-preview-empty">Elegí un país para ver cómo queda la selección.</div>`;
+                return;
+            }
+
+            let team;
+            if (sel === 'CUSTOM') {
+                team = {
+                    name: document.getElementById('custom-country-name').value.trim() || 'Tu país',
+                    code: document.getElementById('custom-country-code').value.trim().toUpperCase() || '---',
+                    flag: document.getElementById('custom-country-flag').value.trim().toLowerCase(),
+                    colorBg: '#334155',
+                    colorText: '#ffffff'
+                };
+            } else {
+                const [code, name, bg, text] = sel.split('|');
+                team = { code, name, colorBg: bg, colorText: text };
+            }
+
+            box.style.setProperty('--team', team.colorBg);
+            box.innerHTML = `
+                ${teamLogoMarkup({ ...team, name: escHtml(team.name) }, 'w-14 h-14')}
+                <div class="min-w-0">
+                    <div class="reg-preview-name">${escHtml(team.name)}</div>
+                    <div class="reg-preview-meta">${flagMarkup(team, 'w-6 h-4')}<span>${escHtml(team.code)}</span></div>
+                </div>
+            `;
+        }
+
+        renderCountryGrid();
+        renderRegPreview();
+
         function addTeam(e) {
             e.preventDefault();
             const sel = document.getElementById('country-select').value;
             let code, name, bg, text;
+
+            if (!sel) {
+                showToast("Elegí el país de la selección.");
+                return;
+            }
 
             if (sel === 'CUSTOM') {
                 name = document.getElementById('custom-country-name').value.trim();
@@ -1585,6 +1876,7 @@
                 code,
                 colorBg: bg,
                 colorText: text,
+                flag: sel === 'CUSTOM' ? document.getElementById('custom-country-flag').value.trim().toLowerCase() : '',
                 players: [
                     { id: 'pl_' + uid(), name: p1 },
                     { id: 'pl_' + uid(), name: p2 },
@@ -2997,10 +3289,10 @@
                         <td class="py-3 px-4 font-bold text-center text-slate-500">${idx + 1}</td>
                         <td class="py-3 px-4 font-bold text-slate-900">${s.name}</td>
                         <td class="py-3 px-4">
-                            <span style="background-color:${s.team.colorBg}; color:${s.team.colorText}" class="font-sport text-xs font-bold px-2 py-0.5 rounded mr-1.5">
-                                ${s.team.code}
+                            <span class="inline-flex items-center space-x-2">
+                                ${flagMarkup(s.team, 'w-7 h-[18px]')}
+                                <span class="text-xs text-slate-600 font-medium">${s.team.name}</span>
                             </span>
-                            <span class="text-xs text-slate-600 font-medium">${s.team.name}</span>
                         </td>
                         <td class="py-3 px-4 text-center font-sport text-2xl font-bold text-emerald-700">${s.goals}</td>
                     </tr>
