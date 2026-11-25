@@ -3109,7 +3109,15 @@
             document.getElementById('modal-away-score').textContent = awaySum;
 
             updateModalPlayerMinutesDisplay();
-
+            // Sincronizar marcador parcial en vivo hacia Firebase para el protocasino
+            if (!match.played) {
+                match.homeScore = homeSum;
+                match.awayScore = awaySum;
+                match.goals = { ...modalTempGoals };
+                match.extraGoals = { ...modalExtraGoals };
+                match.liveSecondsLeft = timerRemainingSeconds;
+                syncToFirebase();
+            }
             const tieBox = document.getElementById('modal-tiebreaker-box');
             if (isKnockoutModal && homeSum === awaySum) {
                 tieBox.classList.remove('hidden');
