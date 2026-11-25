@@ -622,6 +622,9 @@
             border-bottom: 2px solid #f8fafc !important;
         }
     </style>
+    <!-- SDK de Firebase (App + Realtime Database) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -1254,6 +1257,88 @@
 
     <script>
         /* ==========================================================================
+           CONEXIÓN CON FIREBASE REALTIME DATABASE (PARA SINCRONIZAR CON PROTOCASINO)
+           ========================================================================== */
+       const firebaseConfig = {
+  apiKey: "AIzaSyCIEPatrfjAIJlksl8hkPwz_76UUdAl66M",
+  authDomain: "torneo3v3mombe.firebaseapp.com",
+  databaseURL: "https://torneo3v3mombe-default-rtdb.firebaseio.com",
+  projectId: "torneo3v3mombe",
+  storageBucket: "torneo3v3mombe.firebasestorage.app",
+  messagingSenderId: "713112221266",
+  appId: "1:713112221266:web:e73fe3cc5d53426ce8d18b",
+  measurementId: "G-7W4CSF2VDS"
+};
+
+        let firebaseDb = null;
+
+        function initFirebase() {
+            try {
+                if (typeof firebase === 'undefined') return;
+                if (!FIREBASE_CONFIG.databaseURL || FIREBASE_CONFIG.databaseURL.includes('PEGAR_TU_PROJECT_ID')) {
+                    console.info('Firebase aún sin configurar. Funcionando en modo local.');
+                    return;
+                }
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(FIREBASE_CONFIG);
+                }
+                firebaseDb = firebase.database();
+                console.info('Firebase Realtime Database conectado correctamente.');
+            } catch (err) {
+                console.error('Error al inicializar Firebase:', err);
+            }
+        }
+
+        function buildCasinoFeed() {
+            const enrichMatch = (m, isKnockout) => {
+                const home = getTeam(m.homeId);
+                const away = getTeam(m.awayId);
+                const mvp = m.mvpId ? getPlayer(m.mvpId) : null;
+                return {
+                    id: m.id,
+                    fase: isKnockout ? 'ELIMINATORIA' : 'REGULAR',
+                    grupoOEtapa: isKnockout ? (m.stageName || '') : (m.groupName || ''),
+                    fecha: m.round || null,
+                    estado: m.played ? 'finalizado' : (home && away ? 'pendiente' : 'por_definir'),
+                    local: home ? { id: home.id, nombre: home.name, sigla: home.code, jugadores: home.players } : null,
+                    visitante: away ? { id: away.id, nombre: away.name, sigla: away.code, jugadores: away.players } : null,
+                    golesLocal: m.homeScore || 0,
+                    golesVisitante: m.awayScore || 0,
+                    golesPorJugador: m.goals || {},
+                    mvp: mvp ? { id: mvp.id, nombre: mvp.name, equipo: mvp.team.code } : null,
+                    ganadorId: isKnockout ? (m.winnerId || null) : (
+                        !m.played ? null : (m.homeScore > m.awayScore ? m.homeId : (m.awayScore > m.homeScore ? m.awayId : 'EMPATE'))
+                    )
+                };
+            };
+
+            return JSON.parse(JSON.stringify({
+                actualizadoEn: Date.now(),
+                estadoTorneo: state.status,
+                formato: state.format,
+                equipos: state.teams,
+                partidos: [
+                    ...state.matches.map(m => enrichMatch(m, false)),
+                    ...state.knockoutMatches.map(m => enrichMatch(m, true))
+                ]
+            }));
+        }
+
+        function syncToFirebase() {
+            if (!firebaseDb) return;
+            try {
+                const cleanState = JSON.parse(JSON.stringify(state));
+                const casinoFeed = buildCasinoFeed();
+                firebaseDb.ref('torneo3v3').set({
+                    state: cleanState,
+                    casinoFeed: casinoFeed
+                });
+            } catch (err) {
+                console.error('Error sincronizando con Firebase:', err);
+            }
+        }
+
+        /* ==========================================================================
            ESTADO GLOBAL DE LA APLICACIÓN
            ========================================================================== */
         let state = {
@@ -1486,6 +1571,8 @@
         }
 
         window.onload = function() {
+            initFirebase();
+
             const savedTheme = localStorage.getItem('torneo3v3_dark_mode');
             if (savedTheme === '1') {
                 applyTheme(true);
@@ -1501,6 +1588,7 @@
                     } else {
                         renderSetupTeams();
                     }
+                    syncToFirebase();
                 } catch (e) {
                     console.error("Error leyendo estado guardado", e);
                 }
@@ -1524,6 +1612,7 @@
 
         function saveState() {
             localStorage.setItem('torneo3v3_state', JSON.stringify(state));
+            syncToFirebase();
         }
 
         function showToast(msg) {
