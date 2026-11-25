@@ -1259,16 +1259,16 @@
         /* ==========================================================================
            CONEXIÓN CON FIREBASE REALTIME DATABASE (PARA SINCRONIZAR CON PROTOCASINO)
            ========================================================================== */
-       const FIREBASE_CONFIG= {
-  apiKey: "AIzaSyCIEPatrfjAIJlksl8hkPwz_76UUdAl66M",
-  authDomain: "torneo3v3mombe.firebaseapp.com",
-  databaseURL: "https://torneo3v3mombe-default-rtdb.firebaseio.com",
-  projectId: "torneo3v3mombe",
-  storageBucket: "torneo3v3mombe.firebasestorage.app",
-  messagingSenderId: "713112221266",
-  appId: "1:713112221266:web:e73fe3cc5d53426ce8d18b",
-  measurementId: "G-7W4CSF2VDS"
-};
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyCIEPatrfjAIJlksl8hkPwz_76UUdAl66M",
+            authDomain: "torneo3v3mombe.firebaseapp.com",
+            databaseURL: "https://torneo3v3mombe-default-rtdb.firebaseio.com",
+            projectId: "torneo3v3mombe",
+            storageBucket: "torneo3v3mombe.firebasestorage.app",
+            messagingSenderId: "713112221266",
+            appId: "1:713112221266:web:e73fe3cc5d53426ce8d18b",
+            measurementId: "G-7W4CSF2VDS"
+        };
 
         let firebaseDb = null;
 
@@ -1294,12 +1294,16 @@
                 const home = getTeam(m.homeId);
                 const away = getTeam(m.awayId);
                 const mvp = m.mvpId ? getPlayer(m.mvpId) : null;
+                const estado = m.played
+                    ? 'finalizado'
+                    : (m.isLive ? 'en_vivo' : (home && away ? 'pendiente' : 'por_definir'));
                 return {
                     id: m.id,
                     fase: isKnockout ? 'ELIMINATORIA' : 'REGULAR',
                     grupoOEtapa: isKnockout ? (m.stageName || '') : (m.groupName || ''),
                     fecha: m.round || null,
-                    estado: m.played ? 'finalizado' : (home && away ? 'pendiente' : 'por_definir'),
+                    estado: estado,
+                    minutoEnVivo: m.liveMinuteLabel || null,
                     local: home ? { id: home.id, nombre: home.name, sigla: home.code, jugadores: home.players } : null,
                     visitante: away ? { id: away.id, nombre: away.name, sigla: away.code, jugadores: away.players } : null,
                     golesLocal: m.homeScore || 0,
@@ -2855,8 +2859,8 @@
                 <option value="${away.id}" ${match.penaltyWinnerId === away.id ? 'selected' : ''}>Avanza ${away.name}</option>
             `;
 
-            recalculateModalScores();
             resetMatchTimer();
+            recalculateModalScores();
             document.getElementById('match-modal').classList.remove('hidden');
         }
 
@@ -2963,14 +2967,19 @@
 
             timerRunning = true;
             updateTimerDisplay();
+            syncLiveMatchProgress();
             timerInterval = setInterval(() => {
                 if (timerRemainingSeconds > 0) {
                     timerRemainingSeconds--;
                     updateTimerDisplay();
+                    if (timerRemainingSeconds % 5 === 0 || timerRemainingSeconds <= 10) {
+                        syncLiveMatchProgress();
+                    }
                     if (timerRemainingSeconds === 0) {
                         clearInterval(timerInterval);
                         timerRunning = false;
                         updateTimerDisplay();
+                        syncLiveMatchProgress();
                         playWhistleSound();
                         showToast("¡Final del tiempo reglamentario!");
                     }
@@ -2984,6 +2993,7 @@
             timerAddedSeconds = 0;
             timerRemainingSeconds = timerBaseMinutes * 60;
             updateTimerDisplay();
+            syncLiveMatchProgress();
         }
 
         function changeBaseDuration(deltaMins) {
@@ -3001,8 +3011,32 @@
             timerAddedSeconds += seconds;
             timerRemainingSeconds += seconds;
             updateTimerDisplay();
+            syncLiveMatchProgress();
             const label = seconds >= 60 ? `+${seconds / 60} min` : `+${seconds} seg`;
             showToast(`Tiempo adicionado: ${label}`);
+        }
+
+        function syncLiveMatchProgress() {
+            if (!activeMatchId) return;
+            const matchList = isKnockoutModal ? state.knockoutMatches : state.matches;
+            const match = matchList.find(m => m.id === activeMatchId);
+            if (!match || match.played) return;
+
+            const homeScore = parseInt(document.getElementById('modal-home-score')?.textContent || '0', 10) || 0;
+            const awayScore = parseInt(document.getElementById('modal-away-score')?.textContent || '0', 10) || 0;
+
+            match.isLive = true;
+            match.homeScore = homeScore;
+            match.awayScore = awayScore;
+            match.goals = { ...modalTempGoals };
+            match.extraGoals = { ...modalExtraGoals };
+            match.goalEvents = modalGoalEvents.map(e => ({ ...e }));
+            match.liveSecondsLeft = timerRemainingSeconds;
+            match.liveRunning = timerRunning;
+            match.liveMinuteLabel = timerRunning
+                ? getCurrentMatchMinuteLabel()
+                : (homeScore + awayScore > 0 ? getCurrentMatchMinuteLabel() : 'EN VIVO');
+            syncToFirebase();
         }
 
         function renderModalPlayerInputs(team, containerId) {
@@ -3109,15 +3143,8 @@
             document.getElementById('modal-away-score').textContent = awaySum;
 
             updateModalPlayerMinutesDisplay();
-            // Sincronizar marcador parcial en vivo hacia Firebase para el protocasino
-            if (!match.played) {
-                match.homeScore = homeSum;
-                match.awayScore = awaySum;
-                match.goals = { ...modalTempGoals };
-                match.extraGoals = { ...modalExtraGoals };
-                match.liveSecondsLeft = timerRemainingSeconds;
-                syncToFirebase();
-            }
+            syncLiveMatchProgress();
+
             const tieBox = document.getElementById('modal-tiebreaker-box');
             if (isKnockoutModal && homeSum === awaySum) {
                 tieBox.classList.remove('hidden');
@@ -3134,6 +3161,9 @@
             const homeScore = parseInt(document.getElementById('modal-home-score').textContent);
             const awayScore = parseInt(document.getElementById('modal-away-score').textContent);
 
+            match.isLive = false;
+            match.liveRunning = false;
+            match.liveMinuteLabel = null;
             match.played = true;
             match.homeScore = homeScore;
             match.awayScore = awayScore;
@@ -3167,6 +3197,9 @@
             const match = matchList.find(m => m.id === activeMatchId);
             if (!match) return;
 
+            match.isLive = false;
+            match.liveRunning = false;
+            match.liveMinuteLabel = null;
             match.played = false;
             match.homeScore = 0;
             match.awayScore = 0;
@@ -3185,6 +3218,17 @@
         function closeMatchModal() {
             clearInterval(timerInterval);
             timerRunning = false;
+            if (activeMatchId) {
+                const matchList = isKnockoutModal ? state.knockoutMatches : state.matches;
+                const match = matchList.find(m => m.id === activeMatchId);
+                if (match && !match.played && (match.homeScore || 0) === 0 && (match.awayScore || 0) === 0) {
+                    match.isLive = false;
+                    match.liveRunning = false;
+                    match.liveMinuteLabel = null;
+                    delete match.liveSecondsLeft;
+                    syncToFirebase();
+                }
+            }
             document.getElementById('match-modal').classList.add('hidden');
             activeMatchId = null;
         }
