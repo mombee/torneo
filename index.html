@@ -612,7 +612,7 @@
         let expandedMatchProps = {}; // matchId -> boolean (desplegable de +goles y goles por jugador)
             clearTimeout(window._toastTimer);
             window._toastTimer = setTimeout(() => t.classList.add('hidden'), 3400);
-        }
+        
 
         function uid() {
             return 'bet_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
